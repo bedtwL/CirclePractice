@@ -1,19 +1,28 @@
 package me.itsglobally.circlePractice.listeners;
 
 import me.itsglobally.circlePractice.CirclePractice;
+import me.itsglobally.circlePractice.data.Arena;
 import me.itsglobally.circlePractice.data.PracticePlayer;
 import me.itsglobally.circlePractice.utils.MessageUtil;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PlayerListener implements Listener {
     
     private final CirclePractice plugin;
-    
+
+    List<Location> blockplaced = new ArrayList<>();
+
     public PlayerListener(CirclePractice plugin) {
         this.plugin = plugin;
     }
@@ -51,8 +60,45 @@ public class PlayerListener implements Listener {
         PracticePlayer pP = plugin.getPlayerManager().getPlayer(player);
         if (pP.getState() == PracticePlayer.PlayerState.SPECTATING) {
             e.setCancelled(true);
+            MessageUtil.sendActionBar(player, "&cYou cannot place blocks here!");
         }
-        if (pP.getState() == PracticePlayer.PlayerState.DUEL ) {
+        if (pP.getState() == PracticePlayer.PlayerState.DUEL) {
+            Arena a = plugin.getPlayerManager().getPlayer(player.getUniqueId()).getCurrentDuel().getArena();
+            if (!a.canBuild()) {
+                e.setCancelled(true);
+                MessageUtil.sendActionBar(player, "&cYou cannot place blocks here!");
+                return;
+            }
+            Material against = e.getBlockAgainst().getType();
+            if (against == Material.WATER || against == Material.STATIONARY_WATER || against == Material.LAVA || against == Material.STATIONARY_LAVA) {
+                MessageUtil.sendActionBar(player, "&cYou cannot place blocks here!");
+                e.setCancelled(true);
+                return;
+            }
+            blockplaced.add(e.getBlockPlaced().getLocation());
+
+        }
+    }
+
+    @EventHandler
+    public void onBreak(BlockBreakEvent e) {
+        Player player = e.getPlayer();
+        PracticePlayer pP = plugin.getPlayerManager().getPlayer(player);
+        if (pP.getState() == PracticePlayer.PlayerState.SPECTATING) {
+            e.setCancelled(true);
+            MessageUtil.sendActionBar(player, "&cYou cannot place blocks here!");
+        }
+        if (pP.getState() == PracticePlayer.PlayerState.DUEL) {
+            Arena a = plugin.getPlayerManager().getPlayer(player.getUniqueId()).getCurrentDuel().getArena();
+            if (!a.canBuild()) {
+                e.setCancelled(true);
+                MessageUtil.sendActionBar(player, "&cYou cannot place blocks here!");
+                return;
+            }
+            if (!blockplaced.contains(e.getBlock().getLocation())) {
+                e.setCancelled(true);
+                MessageUtil.sendActionBar(player, "&cYou can only place blocks that placed by player!");
+            }
 
         }
     }
