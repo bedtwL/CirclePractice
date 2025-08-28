@@ -6,6 +6,7 @@ import me.itsglobally.circlePractice.utils.MessageUtil;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -43,5 +44,16 @@ public class PlayerListener implements Listener {
         }
         
         plugin.getPlayerManager().removePlayer(player.getUniqueId());
+    }
+    @EventHandler
+    public void onPlace(BlockPlaceEvent e) {
+        Player player = e.getPlayer();
+        PracticePlayer pP = plugin.getPlayerManager().getPlayer(player);
+        if (pP.getState() == PracticePlayer.PlayerState.SPECTATING) {
+            e.setCancelled(true);
+        }
+        if (pP.getState() == PracticePlayer.PlayerState.DUEL ) {
+
+        }
     }
 }

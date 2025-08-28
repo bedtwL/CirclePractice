@@ -36,15 +36,23 @@ public class ArenaCommand implements CommandExecutor {
         }
         
         String subCommand = args[0];
-        
+        // /arena create gay true
         if (subCommand.equalsIgnoreCase("create")) {
-            if (args.length != 2) {
-                MessageUtil.sendMessage(player, "&cUsage: /arena create <name>");
+
+            if (args.length < 3) {
+                MessageUtil.sendMessage(player, "&cUsage: /arena create <name> <canBuild>");
                 return true;
             }
             
             String name = args[1];
-            plugin.getArenaManager().createArena(name);
+            Boolean canBuild = false;
+            try {
+                canBuild = Boolean.getBoolean(args[2]);
+            } catch (Exception e) {
+                e.printStackTrace();
+                MessageUtil.sendMessage(player, "&cUsage: /arena create <name> <canBuild>");
+            }
+            plugin.getArenaManager().createArena(name, canBuild);
             MessageUtil.sendMessage(player, "&aCreated arena &e" + name + "&a!");
             
         } else if (subCommand.equalsIgnoreCase("delete")) {

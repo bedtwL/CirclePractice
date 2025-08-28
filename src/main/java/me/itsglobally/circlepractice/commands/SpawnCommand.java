@@ -1,6 +1,7 @@
 package me.itsglobally.circlePractice.commands;
 
 import me.itsglobally.circlePractice.CirclePractice;
+import me.itsglobally.circlePractice.data.Duel;
 import me.itsglobally.circlePractice.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -20,12 +21,12 @@ public class SpawnCommand implements CommandExecutor {
     
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             sender.sendMessage("This command can only be used by players!");
             return true;
         }
-        
-        Player player = (Player) sender;
+        Duel duel = plugin.getDuelManager().getDuel(player.getUniqueId());
+        if (duel != null) plugin.getDuelManager().endDuel(duel, duel.getOpponent(plugin.getPlayerManager().getPlayer(player.getUniqueId())));
         plugin.getConfigManager().teleportToSpawn(player);
         MessageUtil.sendMessage(player, "&aTeleported to spawn!");
         return true;

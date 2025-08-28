@@ -73,7 +73,8 @@ public class KitCommand implements CommandExecutor {
             
             MessageUtil.sendMessage(player, "&aYou are now editing the &e" + kit + " &akit!");
             MessageUtil.sendMessage(player, "&eClose your inventory to save changes!");
-            
+            player.openInventory(player.getInventory());
+
         } else if (subCommand.equalsIgnoreCase("load")) {
             if (args.length != 2) {
                 MessageUtil.sendMessage(player, "&cUsage: /kit load <kit>");

@@ -11,26 +11,26 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ArenaManager {
-    
+
     private final CirclePractice plugin;
     private final Map<String, Arena> arenas;
-    
+
     public ArenaManager(CirclePractice plugin) {
         this.plugin = plugin;
         this.arenas = new HashMap<>();
         loadArenas();
     }
-    
+
     private void loadArenas() {
         FileConfiguration config = plugin.getConfigManager().getArenas();
         ConfigurationSection arenasSection = config.getConfigurationSection("arenas");
-        
+
         if (arenasSection == null) return;
-        
+
         for (String name : arenasSection.getKeys(false)) {
             Arena arena = new Arena(name);
             ConfigurationSection arenaSection = arenasSection.getConfigurationSection(name);
-            
+
             if (arenaSection.contains("pos1")) {
                 arena.setPos1(LocationUtil.deserializeLocation(arenaSection.getString("pos1")));
             }
@@ -40,28 +40,35 @@ public class ArenaManager {
             if (arenaSection.contains("spectator")) {
                 arena.setSpectatorSpawn(LocationUtil.deserializeLocation(arenaSection.getString("spectator")));
             }
-            
+            if (arenaSection.contains("canBuild")) {
+                arena.setCanBuild(arenaSection.getBoolean("canBuild"));
+            } else {
+                arena.setCanBuild(false); // default false if not set
+            }
+
             arenas.put(name, arena);
         }
     }
-    
-    public void createArena(String name) {
+
+    public void createArena(String name, boolean canBuild) {
         Arena arena = new Arena(name);
+        arena.setCanBuild(canBuild); // set the build option
         arenas.put(name, arena);
+        saveArena(arena); // save immediately
     }
-    
+
     public void deleteArena(String name) {
         arenas.remove(name);
-        
+
         FileConfiguration config = plugin.getConfigManager().getArenas();
         config.set("arenas." + name, null);
         plugin.getConfigManager().saveArenas();
     }
-    
+
     public void saveArena(Arena arena) {
         FileConfiguration config = plugin.getConfigManager().getArenas();
         String path = "arenas." + arena.getName();
-        
+
         if (arena.getPos1() != null) {
             config.set(path + ".pos1", LocationUtil.serializeLocation(arena.getPos1()));
         }
@@ -71,21 +78,23 @@ public class ArenaManager {
         if (arena.getSpectatorSpawn() != null) {
             config.set(path + ".spectator", LocationUtil.serializeLocation(arena.getSpectatorSpawn()));
         }
-        
+
+        config.set(path + ".canBuild", arena.canBuild()); // save build option
+
         plugin.getConfigManager().saveArenas();
     }
-    
+
     public Arena getArena(String name) {
         return arenas.get(name);
     }
-    
+
     public Arena getAvailableArena() {
         return arenas.values().stream()
-            .filter(arena -> !arena.isInUse() && arena.isComplete())
-            .findFirst()
-            .orElse(null);
+                .filter(arena -> !arena.isInUse() && arena.isComplete())
+                .findFirst()
+                .orElse(null);
     }
-    
+
     public Map<String, Arena> getAllArenas() {
         return arenas;
     }
