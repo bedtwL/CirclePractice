@@ -3,6 +3,7 @@ package me.itsglobally.circlePractice.commands;
 import me.itsglobally.circlePractice.CirclePractice;
 import me.itsglobally.circlePractice.data.PracticePlayer;
 import me.itsglobally.circlePractice.utils.MessageUtil;
+import me.itsglobally.circlePractice.utils.NMSUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -73,7 +74,7 @@ public class KitCommand implements CommandExecutor {
             
             MessageUtil.sendMessage(player, "&aYou are now editing the &e" + kit + " &akit!");
             MessageUtil.sendMessage(player, "&eClose your inventory to save changes!");
-            player.openInventory(player.getInventory());
+            NMSUtils.openPlayerInventory(player);
 
         } else if (subCommand.equalsIgnoreCase("load")) {
             if (args.length != 2) {
