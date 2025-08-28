@@ -1,0 +1,3 @@
+name: CirclePractice
+version: '${project.version}'
+main: me.itsglobally.circlepractice.CirclePractice
