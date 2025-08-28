@@ -1,3 +1,44 @@
 name: CirclePractice
-version: '${project.version}'
-main: me.itsglobally.circlepractice.CirclePractice
+version: 1.0.0
+main: me.itsglobally.circlePractice.CirclePractice
+api-version: 1.8
+authors: [ItsGlobally, bolt.new]
+description: Advanced PvP Practice Plugin
+
+commands:
+  duel:
+    description: Send a duel request to a player
+    usage: /<command> <player> <kit>
+  accept:
+    description: Accept a duel request
+    usage: /<command>
+  queue:
+    description: Join a practice queue
+    usage: /<command> <kit>
+  leave:
+    description: Leave current queue or duel
+    usage: /<command>
+  stats:
+    description: View player statistics
+    usage: /<command> [player]
+  leaderboard:
+    description: View leaderboards
+    usage: /<command> <kit>
+  spawn:
+    description: Return to spawn
+    usage: /<command>
+  kit:
+    description: Kit management commands
+    usage: /<command> <editor|load> [kit]
+  arena:
+    description: Arena management commands
+    usage: /<command> <create|delete|list> [name]
+    permission: circlepractice.admin
+
+permissions:
+  circlepractice.admin:
+    description: Admin permissions
+    default: op
+  circlepractice.use:
+    description: Basic plugin usage
+    default: true

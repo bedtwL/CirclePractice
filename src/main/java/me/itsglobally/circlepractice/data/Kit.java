@@ -1,21 +1,21 @@
-package me.itsglobally.circlepractice.data;
+package me.itsglobally.circlePractice.data;
 
 import org.bukkit.inventory.ItemStack;
 
 public class Kit {
-
+    
     private final String name;
     private ItemStack[] contents;
     private ItemStack[] armor;
     private boolean enabled;
     private boolean ranked;
-
+    
     public Kit(String name) {
         this.name = name;
         this.enabled = true;
         this.ranked = true;
     }
-
+    
     public String getName() { return name; }
     public ItemStack[] getContents() { return contents; }
     public void setContents(ItemStack[] contents) { this.contents = contents; }

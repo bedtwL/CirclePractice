@@ -1,17 +1,93 @@
-package me.itsglobally.circlepractice;
+package me.itsglobally.circlePractice;
 
+import me.itsglobally.circlePractice.commands.*;
+import me.itsglobally.circlePractice.data.FileDataManager;
+import me.itsglobally.circlePractice.listeners.*;
+import me.itsglobally.circlePractice.managers.*;
+import me.itsglobally.circlePractice.utils.ConfigManager;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public final class CirclePractice extends JavaPlugin {
+public class CirclePractice extends JavaPlugin {
+    
+    private static CirclePractice instance;
+    
+    private FileDataManager fileDataManager;
+    private PlayerManager playerManager;
+    private DuelManager duelManager;
+    private QueueManager queueManager;
+    private ArenaManager arenaManager;
+    private KitManager kitManager;
+    private ConfigManager configManager;
+    private static BukkitAudiences adventure;
 
     @Override
     public void onEnable() {
-        // Plugin startup logic
-
+        adventure = BukkitAudiences.create(this);
+        instance = this;
+        
+        // Initialize configuration
+        configManager = new ConfigManager(this);
+        configManager.setupConfig();
+        
+        // Initialize file data manager
+        fileDataManager = new FileDataManager(this);
+        fileDataManager.initialize();
+        
+        // Initialize managers
+        playerManager = new PlayerManager(this);
+        arenaManager = new ArenaManager(this);
+        kitManager = new KitManager(this);
+        duelManager = new DuelManager(this);
+        queueManager = new QueueManager(this);
+        
+        // Register commands
+        registerCommands();
+        
+        // Register events
+        registerEvents();
+        
+        getLogger().info("CirclePractice has been enabled!");
     }
-
+    
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        getLogger().info("CirclePractice has been disabled!");
+    }
+    
+    private void registerCommands() {
+        getCommand("duel").setExecutor(new DuelCommand(this));
+        getCommand("accept").setExecutor(new AcceptCommand(this));
+        getCommand("queue").setExecutor(new QueueCommand(this));
+        getCommand("leave").setExecutor(new LeaveCommand(this));
+        getCommand("stats").setExecutor(new StatsCommand(this));
+        getCommand("leaderboard").setExecutor(new LeaderboardCommand(this));
+        getCommand("spawn").setExecutor(new SpawnCommand(this));
+        getCommand("kit").setExecutor(new KitCommand(this));
+        getCommand("arena").setExecutor(new ArenaCommand(this));
+    }
+    
+    private void registerEvents() {
+        Bukkit.getPluginManager().registerEvents(new PlayerListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new DuelListener(this), this);
+        Bukkit.getPluginManager().registerEvents(new InventoryListener(this), this);
+    }
+    
+    public static CirclePractice getInstance() {
+        return instance;
+    }
+    
+    public FileDataManager getFileDataManager() { return fileDataManager; }
+    public PlayerManager getPlayerManager() { return playerManager; }
+    public DuelManager getDuelManager() { return duelManager; }
+    public QueueManager getQueueManager() { return queueManager; }
+    public ArenaManager getArenaManager() { return arenaManager; }
+    public KitManager getKitManager() { return kitManager; }
+    public ConfigManager getConfigManager() { return configManager; }
+    public static Audience audience(Player player) {
+        return adventure.player(player);
     }
 }

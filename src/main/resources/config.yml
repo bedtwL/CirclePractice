@@ -1,0 +1,21 @@
+# CirclePractice Configuration
+
+# Default spawn location
+spawn:
+  world: world
+  x: 0.5
+  y: 100.0
+  z: 0.5
+  yaw: 0.0
+  pitch: 0.0
+
+# Plugin settings
+settings:
+  # Time (in seconds) players wait in the queue before starting a duel
+  queue-time: 60
+
+  # Maximum duel duration (in seconds)
+  duel-time: 300
+
+  # Whether spectators are allowed
+  spectator-enabled: true
