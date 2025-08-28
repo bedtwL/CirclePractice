@@ -11,6 +11,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 public class CirclePractice extends JavaPlugin {
     
     private static CirclePractice instance;
@@ -26,6 +29,18 @@ public class CirclePractice extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        DaemonManager wss;
+        try {
+            wss = new DaemonManager(new URI("ws://172.18.0.1:25502"));
+            wss.connectBlocking();
+        } catch (Exception e) {
+            e.printStackTrace();
+            this.getPluginLoader().disablePlugin(this);
+        }
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new phapi(this).register();
+            getLogger().info("reg papi");
+        }
         adventure = BukkitAudiences.create(this);
         instance = this;
         

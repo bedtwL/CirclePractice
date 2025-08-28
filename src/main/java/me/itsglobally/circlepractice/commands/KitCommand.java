@@ -47,11 +47,9 @@ public class KitCommand implements CommandExecutor {
             
             PracticePlayer practicePlayer = plugin.getPlayerManager().getPlayer(player);
             practicePlayer.setState(PracticePlayer.PlayerState.EDITING);
-            
-            // Load saved kit contents or default kit
+
             ItemStack[] saved = practicePlayer.getKitContents(kit);
-            
-            // If not found in memory, try loading from file storage
+
             if (saved == null) {
                 String serialized = plugin.getFileDataManager().getKitContents(player.getUniqueId(), kit);
                 if (serialized != null) {

@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -28,18 +29,19 @@ public class DuelListener implements Listener {
         PracticePlayer practicePlayer = plugin.getPlayerManager().getPlayer(player);
         
         if (practicePlayer != null && practicePlayer.isInDuel()) {
-            // Check if this damage would kill the player
             if (player.getHealth() - event.getFinalDamage() <= 0) {
+                EntityDamageByEntityEvent edbe = (EntityDamageByEntityEvent) event;
                 event.setCancelled(true);
-                
-                // Set player to 1 health to prevent death
-                player.setHealth(1.0);
+
+                player.setHealth(20.0);
                 
                 // End the duel
                 Duel duel = practicePlayer.getCurrentDuel();
                 PracticePlayer winner = duel.getOpponent(practicePlayer);
-                
-                MessageUtil.sendMessage(player, "&cYou have been defeated!");
+
+
+                MessageUtil.sendTitle(player, "&cDEFEAT!", "You have been defeated by " + winner.getName());
+                MessageUtil.sendTitle(winner.getPlayer(), "&aVICTORY!", "You have defeated " + practicePlayer.getName());
                 plugin.getDuelManager().endDuel(duel, winner);
             }
         }
@@ -62,8 +64,9 @@ public class DuelListener implements Listener {
             
             Duel duel = practicePlayer.getCurrentDuel();
             PracticePlayer winner = duel.getOpponent(practicePlayer);
-            
-            MessageUtil.sendMessage(player, "&cYou have been defeated!");
+
+            MessageUtil.sendTitle(player, "&cDEFEAT!", "You have been defeated by " + winner.getName());
+            MessageUtil.sendTitle(winner.getPlayer(), "&aVICTORY!", "You have defeated " + practicePlayer.getName());
             plugin.getDuelManager().endDuel(duel, winner);
         }
     }

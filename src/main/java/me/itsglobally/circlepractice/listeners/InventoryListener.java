@@ -42,6 +42,7 @@ public class InventoryListener implements Listener {
                 );
                 
                 MessageUtil.sendMessage(player, "&aKit &e" + kit + " &asaved successfully!");
+                player.getInventory().clear();
             }
             
             practicePlayer.setState(PracticePlayer.PlayerState.SPAWN);

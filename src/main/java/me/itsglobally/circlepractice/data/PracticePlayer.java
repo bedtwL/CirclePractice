@@ -1,6 +1,7 @@
 package me.itsglobally.circlePractice.data;
 
 import me.itsglobally.circlePractice.utils.InventorySerializer;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -80,7 +81,11 @@ public class PracticePlayer {
         }
         return null;
     }
-    
+
+    public Player getPlayer() {
+        return Bukkit.getPlayer(uuid);
+    }
+
     public enum PlayerState {
         SPAWN, QUEUE, DUEL, SPECTATING, EDITING
     }
