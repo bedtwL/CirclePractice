@@ -68,13 +68,11 @@ public class KitCommand implements CommandExecutor {
                 player.getInventory().setContents(java.util.Arrays.copyOf(saved, 36));
                 player.getInventory().setArmorContents(java.util.Arrays.copyOfRange(saved, 36, 40));
             }
-            
-            // Set the kit being edited
+
             practicePlayer.setQueuedKit(kit);
             
             MessageUtil.sendMessage(player, "&aYou are now editing the &e" + kit + " &akit!");
             MessageUtil.sendMessage(player, "&eClose your inventory to save changes!");
-            NMSUtils.openPlayerInventory(player);
 
         } else if (subCommand.equalsIgnoreCase("load")) {
             if (args.length != 2) {
