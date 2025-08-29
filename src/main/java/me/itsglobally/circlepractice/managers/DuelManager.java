@@ -3,10 +3,13 @@ package me.itsglobally.circlePractice.managers;
 import me.itsglobally.circlePractice.CirclePractice;
 import me.itsglobally.circlePractice.data.Arena;
 import me.itsglobally.circlePractice.data.Duel;
+import me.itsglobally.circlePractice.data.Kit;
 import me.itsglobally.circlePractice.data.PracticePlayer;
 import me.itsglobally.circlePractice.utils.MessageUtil;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.*;
@@ -16,18 +19,28 @@ public class DuelManager {
     private final CirclePractice plugin;
     private final Map<UUID, Duel> duels;
     private final Map<UUID, UUID> duelRequests; // requester -> target
+    private final Map<UUID, String> duelRequestsKit;
     public DuelManager(CirclePractice plugin) {
         this.plugin = plugin;
+        this.duelRequestsKit = new HashMap<>();
         this.duels = new HashMap<>();
         this.duelRequests = new HashMap<>();
     }
     
     public void sendDuelRequest(Player requester, Player target, String kit) {
         UUID requesterUuid = requester.getUniqueId();
+        PracticePlayer PP = plugin.getPlayerManager().getPlayer(requesterUuid);
+
+        if (PP.getState() != PracticePlayer.PlayerState.SPAWN) {
+            MessageUtil.sendMessage(requester, "&cYou are not in the spawn!");
+            duelRequests.remove(requesterUuid);
+            return;
+        }
+
         UUID targetUuid = target.getUniqueId();
         
         duelRequests.put(requesterUuid, targetUuid);
-        
+        duelRequestsKit.put(requesterUuid, kit);
         MessageUtil.sendMessage(requester, "&aYou sent a duel request to &e" + target.getName() + " &afor kit &e" + kit);
         MessageUtil.sendMessage(target, "&e" + requester.getName() + " &ahas sent you a duel request for kit &e" + kit);
         MessageUtil.sendMessage(target, "&aType &e/accept &ato accept the duel!");
@@ -47,7 +60,6 @@ public class DuelManager {
     public void acceptDuel(Player accepter) {
         UUID accepterUuid = accepter.getUniqueId();
         UUID requesterUuid = null;
-        String kit = null;
         
         // Find the requester
         for (Map.Entry<UUID, UUID> entry : duelRequests.entrySet()) {
@@ -68,12 +80,20 @@ public class DuelManager {
             duelRequests.remove(requesterUuid);
             return;
         }
-        
+
+        PracticePlayer PP = plugin.getPlayerManager().getPlayer(requesterUuid);
+
+        if (PP.getState() != PracticePlayer.PlayerState.SPAWN) {
+            MessageUtil.sendMessage(accepter, "&cThe player is not in the spawn!");
+            duelRequests.remove(requesterUuid);
+            return;
+        }
+
         // Remove the request
         duelRequests.remove(requesterUuid);
         
         // Start the duel
-        startDuel(requester, accepter, kit);
+        startDuel(requester, accepter, duelRequestsKit.get(requesterUuid));
     }
     
     public void startDuel(Player player1, Player player2, String kit) {
@@ -94,6 +114,8 @@ public class DuelManager {
             pp2.getState() != PracticePlayer.PlayerState.SPAWN) {
             MessageUtil.sendMessage(player1, "&cOne of the players is not available for a duel!");
             MessageUtil.sendMessage(player2, "&cOne of the players is not available for a duel!");
+            pp1.setState(PracticePlayer.PlayerState.SPAWN);
+            pp2.setState(PracticePlayer.PlayerState.SPAWN);
             return;
         }
         
@@ -102,6 +124,8 @@ public class DuelManager {
         if (arena == null) {
             MessageUtil.sendMessage(player1, "&cNo arenas are available right now!");
             MessageUtil.sendMessage(player2, "&cNo arenas are available right now!");
+            pp1.setState(PracticePlayer.PlayerState.SPAWN);
+            pp2.setState(PracticePlayer.PlayerState.SPAWN);
             return;
         }
         
@@ -129,7 +153,49 @@ public class DuelManager {
         // Apply kit
         plugin.getKitManager().applyKit(player1, kit);
         plugin.getKitManager().applyKit(player2, kit);
-        
+
+        /*ItemStack[] saved1 = pp1.getKitContents(kit);
+
+        if (saved1 == null) {
+            String serialized = plugin.getFileDataManager().getKitContents(player1.getUniqueId(), kit);
+            if (serialized != null) {
+                ItemStack[][] deserialized = me.itsglobally.circlePractice.utils.InventorySerializer.deserializeInventory(serialized);
+                if (deserialized != null) {
+                    player1.getInventory().setContents(deserialized[0]);
+                    player1.getInventory().setArmorContents(deserialized[1]);
+                } else {
+                    plugin.getKitManager().applyKit(player1, kit);
+                }
+            } else {
+                plugin.getKitManager().applyKit(player1, kit);
+            }
+        } else {
+            player1.getInventory().setContents(java.util.Arrays.copyOf(saved1, 36));
+            player1.getInventory().setArmorContents(java.util.Arrays.copyOfRange(saved1, 36, 40));
+        }
+
+        ItemStack[] saved2 = pp1.getKitContents(kit);
+
+        if (saved2 == null) {
+            String serialized = plugin.getFileDataManager().getKitContents(player2.getUniqueId(), kit);
+            if (serialized != null) {
+                ItemStack[][] deserialized = me.itsglobally.circlePractice.utils.InventorySerializer.deserializeInventory(serialized);
+                if (deserialized != null) {
+                    player2.getInventory().setContents(deserialized[0]);
+                    player2.getInventory().setArmorContents(deserialized[1]);
+                } else {
+                    plugin.getKitManager().applyKit(player2, kit);
+                }
+            } else {
+                plugin.getKitManager().applyKit(player2, kit);
+            }
+        } else {
+            player2.getInventory().setContents(java.util.Arrays.copyOf(saved2, 36));
+            player2.getInventory().setArmorContents(java.util.Arrays.copyOfRange(saved2, 36, 40));
+        }*/
+
+
+
         // Start countdown
         startCountdown(duel);
     }
@@ -146,6 +212,10 @@ public class DuelManager {
                 Player p1 = Bukkit.getPlayer(duel.getPlayer1().getUuid());
                 Player p2 = Bukkit.getPlayer(duel.getPlayer2().getUuid());
 
+
+                p1.playSound(p1.getLocation(), Sound.CLICK, 1.0f, 1.0f);
+                p2.playSound(p2.getLocation(), Sound.CLICK, 1.0f, 1.0f);
+
                 if (p1 == null || p2 == null) {
                     endDuel(duel, null);
                     cancel();
@@ -160,6 +230,8 @@ public class DuelManager {
                 } else {
                     MessageUtil.sendMessage(p1, "&aFight!");
                     MessageUtil.sendMessage(p2, "&aFight!");
+                    p1.playSound(p1.getLocation(), Sound.FIREWORK_BLAST, 1.0f, 1.0f);
+                    p2.playSound(p2.getLocation(), Sound.FIREWORK_BLAST, 1.0f, 1.0f);
                     duel.setState(Duel.DuelState.ACTIVE);
                     cancel();
                 }

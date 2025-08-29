@@ -26,7 +26,10 @@ public class SpawnCommand implements CommandExecutor {
             return true;
         }
         Duel duel = plugin.getDuelManager().getDuel(player.getUniqueId());
-        if (duel != null) plugin.getDuelManager().endDuel(duel, duel.getOpponent(plugin.getPlayerManager().getPlayer(player.getUniqueId())));
+        if (duel != null) {
+            plugin.getDuelManager().endDuel(duel, duel.getOpponent(plugin.getPlayerManager().getPlayer(player.getUniqueId())));
+            return true;
+        }
         plugin.getConfigManager().teleportToSpawn(player);
         MessageUtil.sendMessage(player, "&aTeleported to spawn!");
         return true;
