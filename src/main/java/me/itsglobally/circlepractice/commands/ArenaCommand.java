@@ -25,7 +25,7 @@ public class ArenaCommand implements CommandExecutor {
         
         Player player = (Player) sender;
         
-        if (!player.hasPermission("strikepractice.admin")) {
+        if (!player.hasPermission("circlepractice.admin")) {
             MessageUtil.sendMessage(player, "&cYou don't have permission to use this command!");
             return true;
         }

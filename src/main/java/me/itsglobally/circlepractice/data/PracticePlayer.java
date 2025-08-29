@@ -17,7 +17,7 @@ public class PracticePlayer {
     private Duel currentDuel;
     private String queuedKit;
     private long queueStartTime;
-    private Map<String, String> kitContents; // Now stores serialized data
+    private final Map<String, String> kitContents; // Now stores serialized data
     private ItemStack[] previousInventory;
     private ItemStack[] previousArmor;
     

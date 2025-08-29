@@ -70,6 +70,7 @@ public class CirclePractice extends JavaPlugin {
     
     @Override
     public void onDisable() {
+        getFileDataManager().saveAllCached();
         getLogger().info("CirclePractice has been disabled!");
     }
     
