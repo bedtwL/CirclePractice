@@ -15,6 +15,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +83,14 @@ public class FFAListener implements Listener {
                 return;
             }
             blockplaced.add(e.getBlockPlaced().getLocation());
+            new BukkitRunnable() {
+
+                @Override
+                public void run() {
+                    e.getBlockPlaced().setType(Material.AIR);
+                    blockplaced.remove(e.getBlockPlaced().getLocation());
+                }
+            }.runTaskLater(plugin, 8 * 20L);
         }
     }
 
