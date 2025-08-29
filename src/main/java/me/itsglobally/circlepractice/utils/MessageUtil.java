@@ -21,11 +21,13 @@ public class MessageUtil {
     }
     public static void sendTitle(Player player, String title, String subtitle) {
         ChatColor.translateAlternateColorCodes('&', title);
+
         player.sendTitle(
                 ChatColor.translateAlternateColorCodes('&', title),
                 ChatColor.translateAlternateColorCodes('&', subtitle)
         );
     }
+
 
     public static String formatMessage(String message) {
         return ChatColor.translateAlternateColorCodes('&', message);

@@ -7,6 +7,8 @@ import me.itsglobally.circlePractice.managers.*;
 import me.itsglobally.circlePractice.utils.ConfigManager;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.platform.bukkit.BukkitAudiences;
+import net.luckperms.api.LuckPerms;
+import net.luckperms.api.LuckPermsProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -25,10 +27,12 @@ public class CirclePractice extends JavaPlugin {
     private ArenaManager arenaManager;
     private KitManager kitManager;
     private ConfigManager configManager;
+    private FFAManager ffaManager;
     private static BukkitAudiences adventure;
-
+    private static LuckPerms luckPerms;
     @Override
     public void onEnable() {
+
         DaemonManager wss;
         try {
             wss = new DaemonManager(new URI("ws://172.18.0.1:25502"));
@@ -41,6 +45,8 @@ public class CirclePractice extends JavaPlugin {
             new phapi(this).register();
             getLogger().info("reg papi");
         }
+
+        luckPerms = LuckPermsProvider.get();
         adventure = BukkitAudiences.create(this);
         instance = this;
         
@@ -58,7 +64,7 @@ public class CirclePractice extends JavaPlugin {
         kitManager = new KitManager(this);
         duelManager = new DuelManager(this);
         queueManager = new QueueManager(this);
-        
+        ffaManager = new FFAManager(this);
         // Register commands
         registerCommands();
         
@@ -103,6 +109,8 @@ public class CirclePractice extends JavaPlugin {
     public ArenaManager getArenaManager() { return arenaManager; }
     public KitManager getKitManager() { return kitManager; }
     public ConfigManager getConfigManager() { return configManager; }
+    public FFAManager getFFAManager() { return ffaManager; }
+    public LuckPerms getLuckPerms() { return luckPerms; }
     public static Audience audience(Player player) {
         return adventure.player(player);
     }

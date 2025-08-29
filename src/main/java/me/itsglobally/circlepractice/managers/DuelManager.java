@@ -32,7 +32,8 @@ public class DuelManager {
         PracticePlayer PP = plugin.getPlayerManager().getPlayer(requesterUuid);
 
         if (PP.getState() != PracticePlayer.PlayerState.SPAWN) {
-            MessageUtil.sendMessage(requester, "&cYou are not in the spawn!");
+            MessageUtil.sendActionBar(requester, "&cYou are not in the spawn!");
+            requester.playSound(requester.getLocation(), Sound.ENDERMAN_TELEPORT,1.0f, 1.0f);
             duelRequests.remove(requesterUuid);
             return;
         }
@@ -85,6 +86,7 @@ public class DuelManager {
 
         if (PP.getState() != PracticePlayer.PlayerState.SPAWN) {
             MessageUtil.sendMessage(accepter, "&cThe player is not in the spawn!");
+            accepter.playSound(accepter.getLocation(), Sound.ENDERMAN_TELEPORT,1.0f, 1.0f);
             duelRequests.remove(requesterUuid);
             return;
         }

@@ -4,6 +4,7 @@ import me.itsglobally.circlePractice.CirclePractice;
 import me.itsglobally.circlePractice.data.Arena;
 import me.itsglobally.circlePractice.data.PracticePlayer;
 import me.itsglobally.circlePractice.utils.MessageUtil;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -11,6 +12,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -102,4 +104,16 @@ public class PlayerListener implements Listener {
 
         }
     }
+
+    @EventHandler
+    public void onMessage(AsyncPlayerChatEvent e) {
+        e.setCancelled(true);
+        Bukkit.broadcastMessage(MessageUtil.formatMessage(
+                plugin.getPlayerManager().getPrefix(e.getPlayer())
+                        + e.getPlayer().getName()
+                        + "&r » "
+                        + e.getMessage()
+        )); // [RETARDED] Wilson_TW_awa » I AM GAY
+    }
+
 }

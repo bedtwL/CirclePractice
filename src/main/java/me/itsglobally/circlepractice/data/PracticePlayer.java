@@ -44,6 +44,7 @@ public class PracticePlayer {
     
     public boolean isInQueue() { return state == PlayerState.QUEUE; }
     public boolean isInDuel() { return state == PlayerState.DUEL; }
+    public boolean isInFFA() { return state == PlayerState.FFA; }
     public boolean isSpectating() { return state == PlayerState.SPECTATING; }
     
     public void saveInventory(Player player) {
@@ -87,6 +88,6 @@ public class PracticePlayer {
     }
 
     public enum PlayerState {
-        SPAWN, QUEUE, DUEL, SPECTATING, EDITING
+        SPAWN, QUEUE, DUEL, SPECTATING, EDITING, FFA
     }
 }

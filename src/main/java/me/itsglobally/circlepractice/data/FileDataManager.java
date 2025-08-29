@@ -49,7 +49,7 @@ public class FileDataManager {
 
         CachedPlayerData data = new CachedPlayerData(uuid, name);
 
-        // Load stats
+        // Load duel stats
         if (playerData.contains(path + ".stats")) {
             for (String kit : playerData.getConfigurationSection(path + ".stats").getKeys(false)) {
                 int wins = playerData.getInt(path + ".stats." + kit + ".wins", 0);
@@ -66,6 +66,16 @@ public class FileDataManager {
             }
         }
 
+        // Load FFA stats
+        if (playerData.contains(path + ".ffa")) {
+            int kills = playerData.getInt(path + ".ffa.kills", 0);
+            int deaths = playerData.getInt(path + ".ffa.deaths", 0);
+            int wins = playerData.getInt(path + ".ffa.wins", 0);
+            int losses = playerData.getInt(path + ".ffa.losses", 0);
+            int elo = playerData.getInt(path + ".ffa.elo", 1000);
+            data.setFfaStats(new FfaStats(kills, deaths));
+        }
+
         return data;
     }
 
@@ -78,7 +88,7 @@ public class FileDataManager {
         playerData.set(path + ".first-join", data.getFirstJoin());
         playerData.set(path + ".last-seen", System.currentTimeMillis());
 
-        // Save stats
+        // Save duel stats
         for (Map.Entry<String, PlayerStats> entry : data.getStats().entrySet()) {
             String kitPath = path + ".stats." + entry.getKey();
             playerData.set(kitPath + ".wins", entry.getValue().getWins());
@@ -90,6 +100,11 @@ public class FileDataManager {
         for (Map.Entry<String, String> entry : data.getKits().entrySet()) {
             playerData.set(path + ".kits." + entry.getKey(), entry.getValue());
         }
+
+        // Save FFA stats
+        FfaStats ffa = data.getFfaStats();
+        playerData.set(path + ".ffa.kills", ffa.getKills());
+        playerData.set(path + ".ffa.deaths", ffa.getDeaths());
 
         savePlayerDataFile();
     }
@@ -139,6 +154,22 @@ public class FileDataManager {
         return data.getKits().get(kit);
     }
 
+    // --- FFA API ---
+
+    public void updateFfaStats(UUID uuid, long kills, long deaths) {
+        CachedPlayerData data = getCachedData(uuid);
+        FfaStats ffa = data.getFfaStats();
+
+        long newKills = ffa.getKills() + kills;
+        long newDeaths = ffa.getDeaths() + deaths;
+
+        data.setFfaStats(new FfaStats(newKills, newDeaths));
+    }
+
+    public FfaStats getFfaStats(UUID uuid) {
+        return getCachedData(uuid).getFfaStats();
+    }
+
     private void savePlayerDataFile() {
         try {
             playerData.save(playerDataFile);
@@ -178,6 +209,26 @@ public class FileDataManager {
         }
     }
 
+    public static class FfaStats {
+        private final long kills;
+        private final long deaths;
+
+        public FfaStats() {
+            this(0, 0);
+        }
+
+        public FfaStats(long kills, long deaths) {
+            this.kills = kills;
+            this.deaths = deaths;
+        }
+
+        public long getKills() { return kills; }
+        public long getDeaths() { return deaths; }
+        public double getKDR() {
+            return deaths == 0 ? kills : (double) kills / deaths;
+        }
+    }
+
     public static class CachedPlayerData {
         private final UUID uuid;
         private String name;
@@ -185,6 +236,9 @@ public class FileDataManager {
         private long lastSeen;
         private final Map<String, PlayerStats> stats = new HashMap<>();
         private final Map<String, String> kits = new HashMap<>();
+
+        // NEW: FFA stats
+        private FfaStats ffaStats = new FfaStats();
 
         public CachedPlayerData(UUID uuid, String name) {
             this.uuid = uuid;
@@ -200,5 +254,8 @@ public class FileDataManager {
         public void setLastSeen(long lastSeen) { this.lastSeen = lastSeen; }
         public Map<String, PlayerStats> getStats() { return stats; }
         public Map<String, String> getKits() { return kits; }
+
+        public FfaStats getFfaStats() { return ffaStats; }
+        public void setFfaStats(FfaStats ffaStats) { this.ffaStats = ffaStats; }
     }
 }
