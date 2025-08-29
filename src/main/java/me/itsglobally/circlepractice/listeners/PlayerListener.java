@@ -78,7 +78,6 @@ public class PlayerListener implements Listener {
                 return;
             }
             blockplaced.add(e.getBlockPlaced().getLocation());
-
         }
     }
 

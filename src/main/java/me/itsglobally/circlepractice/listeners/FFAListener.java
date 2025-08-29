@@ -1,7 +1,12 @@
 package me.itsglobally.circlePractice.listeners;
 
 import me.itsglobally.circlePractice.CirclePractice;
+import me.itsglobally.circlePractice.data.Arena;
+import me.itsglobally.circlePractice.data.PracticePlayer;
 import me.itsglobally.circlePractice.data.TempData;
+import me.itsglobally.circlePractice.utils.MessageUtil;
+import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -11,6 +16,9 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FFAListener implements Listener {
 
     private final CirclePractice plugin;
@@ -18,6 +26,8 @@ public class FFAListener implements Listener {
     public FFAListener(CirclePractice plugin) {
         this.plugin = plugin;
     }
+
+    List<Location> blockplaced = new ArrayList<>();
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e) {
@@ -44,12 +54,51 @@ public class FFAListener implements Listener {
                 e.setCancelled(true);
                 return;
             }
+            if (vic.getLocation().getY() <= 200 || dmger.getLocation().getY() <= 200) {
+                e.setCancelled(true);
+                return;
+            }
             TempData.setLastHit(vic.getUniqueId(), dmger.getUniqueId());
             TempData.setLastHit(dmger.getUniqueId(), vic.getUniqueId());
             if (vic.getHealth() < e.getFinalDamage()) {
                 e.setCancelled(true);
                 plugin.getFFAManager().kill(vic, dmger);
             }
+        }
+    }
+    @EventHandler
+    public void onPlace(BlockPlaceEvent e) {
+        Player player = e.getPlayer();
+        PracticePlayer pP = plugin.getPlayerManager().getPlayer(player);
+        if (pP.getState() == PracticePlayer.PlayerState.FFA) {
+            if (e.getBlockPlaced().getY() <= 200) {
+                e.setCancelled(true);
+                MessageUtil.sendActionBar(player, "&cYou cannot place blocks here!");
+            }
+            Material against = e.getBlockAgainst().getType();
+            if (against == Material.WATER || against == Material.STATIONARY_WATER || against == Material.LAVA || against == Material.STATIONARY_LAVA) {
+                MessageUtil.sendActionBar(player, "&cYou cannot place blocks here!");
+                e.setCancelled(true);
+                return;
+            }
+            blockplaced.add(e.getBlockPlaced().getLocation());
+        }
+    }
+
+    @EventHandler
+    public void onBreak(BlockBreakEvent e) {
+        Player player = e.getPlayer();
+        PracticePlayer pP = plugin.getPlayerManager().getPlayer(player);
+        if (pP.getState() == PracticePlayer.PlayerState.FFA) {
+            if (e.getBlock().getY() <= 200) {
+                e.setCancelled(true);
+                MessageUtil.sendActionBar(player, "&cYou cannot breaj blocks here!");
+            }
+            if (!blockplaced.contains(e.getBlock().getLocation())) {
+                e.setCancelled(true);
+                MessageUtil.sendActionBar(player, "&cYou cannot break this block!");
+            }
+            blockplaced.remove(e.getBlock().getLocation());
         }
     }
 }
