@@ -23,4 +23,12 @@ public class TempData {
     public static void addtKs(UUID vic, long k) {
         ks.put(vic, getKs(vic) + k);
     }
+    private static final HashMap<UUID, Boolean> build = new HashMap<>();
+
+    public static Boolean getBuild(UUID vic) {
+        return build.getOrDefault(vic, false);
+    }
+    public static void toggleBuild(UUID vic) {
+        build.put(vic, !getBuild(vic));
+    }
 }
