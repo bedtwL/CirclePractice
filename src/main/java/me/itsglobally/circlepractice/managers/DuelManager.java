@@ -101,16 +101,6 @@ public class DuelManager {
     public void startDuel(Player player1, Player player2, String kit) {
         PracticePlayer pp1 = plugin.getPlayerManager().getPlayer(player1);
         PracticePlayer pp2 = plugin.getPlayerManager().getPlayer(player2);
-        for (Player op : Bukkit.getOnlinePlayers()) {
-            if (!(op == player2)) {
-                player1.hidePlayer(op);
-            }
-        }
-        for (Player op : Bukkit.getOnlinePlayers()) {
-            if (!(op == player1)) {
-                player2.hidePlayer(op);
-            }
-        }
         // Check if players are available
         if (pp1.getState() != PracticePlayer.PlayerState.SPAWN || 
             pp2.getState() != PracticePlayer.PlayerState.SPAWN) {
@@ -246,17 +236,6 @@ public class DuelManager {
         
         Player p1 = Bukkit.getPlayer(duel.getPlayer1().getUuid());
         Player p2 = Bukkit.getPlayer(duel.getPlayer2().getUuid());
-
-        for (Player op : Bukkit.getOnlinePlayers()) {
-            if (op != p2) {
-                if (plugin.getPlayerManager().getPlayer(op.getUniqueId()).getState() == PracticePlayer.PlayerState.SPAWN) p1.showPlayer(op);
-            }
-        }
-        for (Player op : Bukkit.getOnlinePlayers()) {
-            if (op != p1) {
-                if (plugin.getPlayerManager().getPlayer(op.getUniqueId()).getState() == PracticePlayer.PlayerState.SPAWN) p2.showPlayer(op);
-            }
-        }
 
         // Reset player states
         duel.getPlayer1().setState(PracticePlayer.PlayerState.SPAWN);

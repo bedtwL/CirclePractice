@@ -29,15 +29,24 @@ public class FFAManager {
             p.playSound(p.getLocation(), Sound.ENDERMAN_TELEPORT,1.0f, 1.0f);
             return;
         }
+        pp.setState(PracticePlayer.PlayerState.FFA);
+        spawn(p);
     }
     public void leaveFFA(Player p) {
         PracticePlayer pp = plugin.getPlayerManager().getPlayer(p.getUniqueId());
+        if (pp.getState() != PracticePlayer.PlayerState.FFA) {
+            MessageUtil.sendActionBar(p, "&cYou are not in the ffa!");
+            p.playSound(p.getLocation(), Sound.ENDERMAN_TELEPORT,1.0f, 1.0f);
+            return;
+        }
+        pp.setState(PracticePlayer.PlayerState.FFA);
+        plugin.getConfigManager().teleportToSpawn(p);
         pp.restoreInventory(p);
     }
     public void spawn(Player p) {
         PracticePlayer pp = plugin.getPlayerManager().getPlayer(p.getUniqueId());
         pp.saveInventory(p);
-        p.getInventory().clear();
+        plugin.getKitManager().applyKit(p, "FFA");
 
     }
     public void kill(Player vic, Player klr) {

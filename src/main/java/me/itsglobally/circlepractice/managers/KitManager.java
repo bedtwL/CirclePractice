@@ -6,6 +6,7 @@ import me.itsglobally.circlePractice.utils.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -63,6 +64,7 @@ public class KitManager {
             contents[0] = new ItemBuilder(Material.DIAMOND_SWORD)
                     .addEnchantment(org.bukkit.enchantments.Enchantment.DAMAGE_ALL, 3) // Sharp 3
                     .addEnchantment(org.bukkit.enchantments.Enchantment.DURABILITY, 3)  // Unbreaking 3
+                    .setUnbreakable(true)
                     .build();
 
             // Slots 1 → instant health potion
@@ -92,25 +94,82 @@ public class KitManager {
             armor[3] = new ItemBuilder(Material.DIAMOND_HELMET)
                     .addEnchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 2)
                     .addEnchantment(org.bukkit.enchantments.Enchantment.DURABILITY, 3)
+                    .setUnbreakable(true)
                     .build();
             armor[2] = new ItemBuilder(Material.DIAMOND_CHESTPLATE)
                     .addEnchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 2)
                     .addEnchantment(org.bukkit.enchantments.Enchantment.DURABILITY, 3)
+                    .setUnbreakable(true)
                     .build();
             armor[1] = new ItemBuilder(Material.DIAMOND_LEGGINGS)
                     .addEnchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 2)
                     .addEnchantment(org.bukkit.enchantments.Enchantment.DURABILITY, 3)
+                    .setUnbreakable(true)
                     .build();
             armor[0] = new ItemBuilder(Material.DIAMOND_BOOTS)
                     .addEnchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 2)
                     .addEnchantment(org.bukkit.enchantments.Enchantment.DURABILITY, 3)
+                    .setUnbreakable(true)
                     .build();
 
             noDebuff.setContents(contents);
             noDebuff.setArmor(armor);
+            noDebuff.setRanked(false);
             kits.put("NoDebuff", noDebuff);
         }
+        if (!kits.containsKey("FFA")) {
+            Kit FFA = new Kit("FFA");
 
+
+            ItemStack[] contents = new ItemStack[36];
+
+            contents[0] = new ItemBuilder(Material.WOOD_SWORD)
+                    .addEnchantment(org.bukkit.enchantments.Enchantment.DAMAGE_ALL, 2)
+                    .addEnchantment(org.bukkit.enchantments.Enchantment.DURABILITY, 3)
+                    .build();
+            contents[1] = new ItemBuilder(Material.BOW)
+                    .addEnchantment(Enchantment.ARROW_KNOCKBACK, 1)
+                    .addEnchantment(Enchantment.ARROW_DAMAGE, 1)
+                    .setUnbreakable(true)
+                    .build();
+            contents[2] = new ItemBuilder(Material.ARROW, 16)
+                    .build();
+            contents[3] = new ItemBuilder(Material.ENDER_PEARL)
+                    .build();
+            contents[4] = new ItemBuilder(Material.SANDSTONE, 64)
+                    .build();
+            contents[5] = new ItemBuilder(Material.STONE_PICKAXE)
+                    .addEnchantment(Enchantment.DIG_SPEED, 2)
+                    .setUnbreakable(true)
+                    .build();
+
+            ItemStack[] armor = new ItemStack[4];
+            armor[3] = new ItemBuilder(Material.LEATHER_HELMET)
+                    .addEnchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 2)
+                    .addEnchantment(org.bukkit.enchantments.Enchantment.DURABILITY, 3)
+                    .setUnbreakable(true)
+                    .build();
+            armor[2] = new ItemBuilder(Material.LEATHER_CHESTPLATE)
+                    .addEnchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 2)
+                    .addEnchantment(org.bukkit.enchantments.Enchantment.DURABILITY, 3)
+                    .setUnbreakable(true)
+                    .build();
+            armor[1] = new ItemBuilder(Material.LEATHER_LEGGINGS)
+                    .addEnchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 2)
+                    .addEnchantment(org.bukkit.enchantments.Enchantment.DURABILITY, 3)
+                    .setUnbreakable(true)
+                    .build();
+            armor[0] = new ItemBuilder(Material.LEATHER_BOOTS)
+                    .addEnchantment(org.bukkit.enchantments.Enchantment.PROTECTION_ENVIRONMENTAL, 2)
+                    .addEnchantment(org.bukkit.enchantments.Enchantment.DURABILITY, 3)
+                    .setUnbreakable(true)
+                    .build();
+
+            FFA.setContents(contents);
+            FFA.setArmor(armor);
+            FFA.setRanked(false);
+            kits.put("FFA", FFA);
+        }
         saveKits();
     }
 

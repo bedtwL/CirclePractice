@@ -8,39 +8,45 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.List;
 
 public class ItemBuilder {
-    
-    private ItemStack item;
-    private ItemMeta meta;
-    
+
+    private final ItemStack item;
+    private final ItemMeta meta;
+
+
     public ItemBuilder(Material material) {
         this(material, 1);
     }
-    
+
     public ItemBuilder(Material material, int amount) {
-        item = new ItemStack(material, amount);
-        meta = item.getItemMeta();
+        this.item = new ItemStack(material, amount);
+        this.meta = this.item.getItemMeta();
     }
-    
+
     public ItemBuilder setDisplayName(String name) {
         meta.setDisplayName(name);
         return this;
     }
-    
+
     public ItemBuilder setLore(List<String> lore) {
         meta.setLore(lore);
         return this;
     }
-    
+
     public ItemBuilder setDurability(short durability) {
         item.setDurability(durability);
         return this;
     }
-    
+
     public ItemBuilder addEnchantment(Enchantment enchantment, int level) {
         meta.addEnchant(enchantment, level, true);
         return this;
     }
-    
+
+    public ItemBuilder setUnbreakable(boolean status) {
+        meta.spigot().setUnbreakable(status);
+        return this;
+    }
+
     public ItemStack build() {
         item.setItemMeta(meta);
         return item;
