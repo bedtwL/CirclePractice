@@ -11,6 +11,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 
 public class DuelListener implements Listener {
@@ -81,4 +82,12 @@ public class DuelListener implements Listener {
             // This will be handled by the SpawnCommand teleportToSpawn method
         }
     }
+
+    @EventHandler
+    public void onMove(PlayerMoveEvent e) {
+        Player p = e.getPlayer();
+        PracticePlayer pp = plugin.getPlayerManager().getPlayer(p.getUniqueId());
+        if (pp.isInDuel() && plugin.getDuelManager().getDuel(p.getUniqueId()).getState() == Duel.DuelState.STARTING) e.setCancelled(true);
+    }
+
 }
