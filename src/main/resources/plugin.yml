@@ -34,6 +34,9 @@ commands:
     description: Arena management commands
     usage: /<command> <create|delete|list> [name]
     permission: circlepractice.admin
+  ffa:
+    description: ga
+    usage: /<command>
 
 permissions:
   circlepractice.admin:

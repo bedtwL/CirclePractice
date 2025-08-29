@@ -90,6 +90,7 @@ public class CirclePractice extends JavaPlugin {
         getCommand("spawn").setExecutor(new SpawnCommand(this));
         getCommand("kit").setExecutor(new KitCommand(this));
         getCommand("arena").setExecutor(new ArenaCommand(this));
+        getCommand("ffa").setExecutor(new FFACommand(this));
     }
     
     private void registerEvents() {
