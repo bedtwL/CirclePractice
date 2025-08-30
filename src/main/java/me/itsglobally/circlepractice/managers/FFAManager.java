@@ -4,15 +4,9 @@ import me.itsglobally.circlePractice.CirclePractice;
 import me.itsglobally.circlePractice.data.PracticePlayer;
 import me.itsglobally.circlePractice.data.TempData;
 import me.itsglobally.circlePractice.utils.MessageUtil;
-import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
-
-import java.util.UUID;
 
 public class FFAManager {
 
@@ -26,29 +20,32 @@ public class FFAManager {
         PracticePlayer pp = plugin.getPlayerManager().getPlayer(p.getUniqueId());
         if (pp.getState() != PracticePlayer.PlayerState.SPAWN) {
             MessageUtil.sendActionBar(p, "&cYou are not in the spawn!");
-            p.playSound(p.getLocation(), Sound.ENDERMAN_TELEPORT,1.0f, 1.0f);
+            p.playSound(p.getLocation(), Sound.ENDERMAN_TELEPORT, 1.0f, 1.0f);
             return;
         }
         pp.setState(PracticePlayer.PlayerState.FFA);
         spawn(p);
     }
+
     public void leaveFFA(Player p) {
         PracticePlayer pp = plugin.getPlayerManager().getPlayer(p.getUniqueId());
         if (pp.getState() != PracticePlayer.PlayerState.FFA) {
             MessageUtil.sendActionBar(p, "&cYou are not in the ffa!");
-            p.playSound(p.getLocation(), Sound.ENDERMAN_TELEPORT,1.0f, 1.0f);
+            p.playSound(p.getLocation(), Sound.ENDERMAN_TELEPORT, 1.0f, 1.0f);
             return;
         }
         pp.setState(PracticePlayer.PlayerState.FFA);
         plugin.getConfigManager().teleportToSpawn(p);
         pp.restoreInventory(p);
     }
+
     public void spawn(Player p) {
         PracticePlayer pp = plugin.getPlayerManager().getPlayer(p.getUniqueId());
         pp.saveInventory(p);
         plugin.getKitManager().applyKit(p, "FFA");
 
     }
+
     public void kill(Player vic, Player klr) {
         if (vic == klr) {
             TempData.setKs(vic.getUniqueId(), 0L);

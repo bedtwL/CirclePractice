@@ -15,10 +15,10 @@ import java.util.List;
 import java.util.Map;
 
 public class KitManager {
-    
+
     private final CirclePractice plugin;
     private final Map<String, Kit> kits;
-    
+
     public KitManager(CirclePractice plugin) {
         this.plugin = plugin;
         this.kits = new HashMap<>();
@@ -175,7 +175,7 @@ public class KitManager {
 
     private void saveKits() {
         FileConfiguration config = plugin.getConfigManager().getKits();
-        
+
         for (Kit kit : kits.values()) {
             String path = "kits." + kit.getName();
             config.set(path + ".contents", kit.getContents());
@@ -183,39 +183,39 @@ public class KitManager {
             config.set(path + ".enabled", kit.isEnabled());
             config.set(path + ".ranked", kit.isRanked());
         }
-        
+
         plugin.getConfigManager().saveKits();
     }
-    
+
     public void applyKit(Player player, String kitName) {
         Kit kit = kits.get(kitName);
         if (kit == null) return;
-        
+
         player.getInventory().clear();
         player.getInventory().setArmorContents(null);
-        
+
         if (kit.getContents() != null) {
             player.getInventory().setContents(kit.getContents());
         }
         if (kit.getArmor() != null) {
             player.getInventory().setArmorContents(kit.getArmor());
         }
-        
+
         player.updateInventory();
     }
-    
+
     public boolean kitExists(String name) {
         return kits.containsKey(name);
     }
-    
+
     public Kit getKit(String name) {
         return kits.get(name);
     }
-    
+
     public Map<String, Kit> getAllKits() {
         return kits;
     }
-    
+
     public void saveKit(String name, ItemStack[] contents, ItemStack[] armor) {
         Kit kit = kits.getOrDefault(name, new Kit(name));
         kit.setContents(contents);

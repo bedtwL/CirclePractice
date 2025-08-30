@@ -15,6 +15,22 @@ public class DaemonManager extends WebSocketClient {
         super(serverUri);
     }
 
+    private static JsonObject basic(String code) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("server", "smp");
+        if (code != null) {
+            obj.addProperty("code", "0");
+        }
+        return obj;
+    }
+
+    private static JsonObject basic() {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("server", "smp");
+        obj.addProperty("code", "0");
+        return obj;
+    }
+
     @Override
     public void onOpen(ServerHandshake handshakedata) {
         Bukkit.getLogger().info("Connected to server");
@@ -32,7 +48,6 @@ public class DaemonManager extends WebSocketClient {
             if (cmd.isEmpty()) return;
             switch (cmd) {
                 default:
-                    return;
             }
         } catch (Exception e) {
             Bukkit.getLogger().info("Invalid JSON: " + message);
@@ -42,20 +57,7 @@ public class DaemonManager extends WebSocketClient {
             send(gson.toJson(obj));
         }
     }
-    private static JsonObject basic(String code) {
-        JsonObject obj = new JsonObject();
-        obj.addProperty("server", "smp");
-        if (code != null) {
-            obj.addProperty("code", "0");
-        }
-        return obj;
-    }
-    private static JsonObject basic() {
-        JsonObject obj = new JsonObject();
-        obj.addProperty("server", "smp");
-        obj.addProperty("code", "0");
-        return obj;
-    }
+
     @Override
     public void onClose(int code, String reason, boolean remote) {
         Bukkit.getLogger().warning("Connection closed: " + reason);

@@ -4,7 +4,6 @@ import me.clip.placeholderapi.expansion.PlaceholderExpansion;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -14,6 +13,24 @@ public class phapi extends PlaceholderExpansion {
     public phapi(CirclePractice plugin) {
         this.plugin = plugin;
     }
+
+    public static String rqOp(Player p, String params) {
+        UUID u = p.getUniqueId();
+        switch (params) {
+            default -> {
+                return "";
+            }
+        }
+    }
+
+    public static String nrqOp(OfflinePlayer p, String params) {
+        switch (params) {
+            default -> {
+                return "";
+            }
+        }
+    }
+
     @Override
     public String getAuthor() {
         return "ItsGlobally";
@@ -51,21 +68,6 @@ public class phapi extends PlaceholderExpansion {
     @Override
     public String onPlaceholderRequest(Player player, String params) {
         return onRequest(player, params);
-    }
-    public static String rqOp(Player p, String params) {
-        UUID u = p.getUniqueId();
-        switch (params) {
-            default -> {
-                return "";
-            }
-        }
-    }
-    public static String nrqOp(OfflinePlayer p, String params) {
-        switch (params) {
-            default -> {
-                return "";
-            }
-        }
     }
 
 }

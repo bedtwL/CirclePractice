@@ -3,7 +3,6 @@ package me.itsglobally.circlePractice.commands;
 import me.itsglobally.circlePractice.CirclePractice;
 import me.itsglobally.circlePractice.data.PracticePlayer;
 import me.itsglobally.circlePractice.utils.MessageUtil;
-import me.itsglobally.circlePractice.utils.NMSUtils;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -11,41 +10,39 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
 public class KitCommand implements CommandExecutor {
-    
+
     private final CirclePractice plugin;
-    
+
     public KitCommand(CirclePractice plugin) {
         this.plugin = plugin;
     }
-    
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player player)) {
             sender.sendMessage("This command can only be used by players!");
             return true;
         }
-        
-        Player player = (Player) sender;
-        
+
         if (args.length == 0) {
             MessageUtil.sendMessage(player, "&cUsage: /kit <editor|load> [kit]");
             return true;
         }
-        
+
         String subCommand = args[0];
-        
+
         if (subCommand.equalsIgnoreCase("editor")) {
             if (args.length != 2) {
                 MessageUtil.sendMessage(player, "&cUsage: /kit editor <kit>");
                 return true;
             }
-            
+
             String kit = args[1];
             if (!plugin.getKitManager().kitExists(kit)) {
                 MessageUtil.sendMessage(player, "&cThat kit doesn't exist!");
                 return true;
             }
-            
+
             PracticePlayer practicePlayer = plugin.getPlayerManager().getPlayer(player);
             practicePlayer.setState(PracticePlayer.PlayerState.EDITING);
 
@@ -70,7 +67,7 @@ public class KitCommand implements CommandExecutor {
             }
 
             practicePlayer.setQueuedKit(kit);
-            
+
             MessageUtil.sendMessage(player, "&aYou are now editing the &e" + kit + " &akit!");
             MessageUtil.sendMessage(player, "&eClose your inventory to save changes!");
 
@@ -79,11 +76,11 @@ public class KitCommand implements CommandExecutor {
                 MessageUtil.sendMessage(player, "&cUsage: /kit load <kit>");
                 return true;
             }
-            
+
             String kit = args[1];
             PracticePlayer practicePlayer = plugin.getPlayerManager().getPlayer(player);
             ItemStack[] saved = practicePlayer.getKitContents(kit);
-            
+
             // Try loading from file storage if not in memory
             if (saved != null) {
                 player.getInventory().setContents(java.util.Arrays.copyOf(saved, 36));
@@ -105,7 +102,7 @@ public class KitCommand implements CommandExecutor {
                 }
             }
         }
-        
+
         return true;
     }
 }

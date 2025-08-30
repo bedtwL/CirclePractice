@@ -10,23 +10,23 @@ import java.util.Map;
 import java.util.UUID;
 
 public class PlayerManager {
-    
+
     private final CirclePractice plugin;
     private final Map<UUID, PracticePlayer> players;
-    
+
     public PlayerManager(CirclePractice plugin) {
         this.plugin = plugin;
         this.players = new HashMap<>();
     }
-    
+
     public PracticePlayer getPlayer(UUID uuid) {
         return players.get(uuid);
     }
-    
+
     public PracticePlayer getPlayer(Player player) {
         return getPlayer(player.getUniqueId());
     }
-    
+
     public void addPlayer(Player player) {
         UUID uuid = player.getUniqueId();
         if (!players.containsKey(uuid)) {
@@ -34,11 +34,11 @@ public class PlayerManager {
             plugin.getFileDataManager().savePlayerData(uuid, player.getName());
         }
     }
-    
+
     public void removePlayer(UUID uuid) {
         players.remove(uuid);
     }
-    
+
     public Map<UUID, PracticePlayer> getAllPlayers() {
         return players;
     }
@@ -47,6 +47,7 @@ public class PlayerManager {
         User user = plugin.getLuckPerms().getUserManager().getUser(p.getUniqueId());
         return user.getCachedData().getMetaData().getPrefix();
     }
+
     public String getPrefixColor(Player p) {
         User user = plugin.getLuckPerms().getUserManager().getUser(p.getUniqueId());
         return (user.getCachedData().getMetaData().getMetaValue("chatcolor") == null) ? user.getCachedData().getMetaData().getMetaValue("chatcolor") : getPrefix(p).substring(0, 2);

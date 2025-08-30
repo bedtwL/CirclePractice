@@ -3,7 +3,6 @@ package me.itsglobally.circlePractice.managers;
 import me.itsglobally.circlePractice.CirclePractice;
 import me.itsglobally.circlePractice.data.Arena;
 import me.itsglobally.circlePractice.utils.LocationUtil;
-import org.bukkit.Location;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 

@@ -1,11 +1,11 @@
 package me.itsglobally.circlePractice.utils;
 
+import me.itsglobally.circlePractice.CirclePractice;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
-import me.itsglobally.circlePractice.CirclePractice;
 
 public class MessageUtil {
 
@@ -19,6 +19,7 @@ public class MessageUtil {
         Component component = LegacyComponentSerializer.legacyAmpersand().deserialize(message);
         CirclePractice.audience(player).sendActionBar(component);
     }
+
     public static void sendTitle(Player player, String title, String subtitle) {
         ChatColor.translateAlternateColorCodes('&', title);
 

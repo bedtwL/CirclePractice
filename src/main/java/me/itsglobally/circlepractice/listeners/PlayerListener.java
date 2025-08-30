@@ -15,13 +15,12 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class PlayerListener implements Listener {
-    
+
     private final CirclePractice plugin;
 
     List<Location> blockplaced = new ArrayList<>();
@@ -29,34 +28,35 @@ public class PlayerListener implements Listener {
     public PlayerListener(CirclePractice plugin) {
         this.plugin = plugin;
     }
-    
+
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         plugin.getPlayerManager().addPlayer(player);
         MessageUtil.sendTitle(player, "&cThis server is still in DEVELOPMENT!", "&aFeel free to report any bugs!");
     }
-    
+
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         PracticePlayer practicePlayer = plugin.getPlayerManager().getPlayer(player);
-        
+
         if (practicePlayer != null) {
             // Handle leaving queue
             if (practicePlayer.isInQueue()) {
                 plugin.getQueueManager().leaveQueue(player);
             }
-            
+
             // Handle leaving duel
             if (practicePlayer.isInDuel()) {
-                plugin.getDuelManager().endDuel(practicePlayer.getCurrentDuel(), 
-                    practicePlayer.getCurrentDuel().getOpponent(practicePlayer));
+                plugin.getDuelManager().endDuel(practicePlayer.getCurrentDuel(),
+                        practicePlayer.getCurrentDuel().getOpponent(practicePlayer));
             }
         }
-        
+
         plugin.getPlayerManager().removePlayer(player.getUniqueId());
     }
+
     @EventHandler
     public void onPlace(BlockPlaceEvent e) {
         Player player = e.getPlayer();

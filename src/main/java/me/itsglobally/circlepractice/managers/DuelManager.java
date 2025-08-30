@@ -3,49 +3,50 @@ package me.itsglobally.circlePractice.managers;
 import me.itsglobally.circlePractice.CirclePractice;
 import me.itsglobally.circlePractice.data.Arena;
 import me.itsglobally.circlePractice.data.Duel;
-import me.itsglobally.circlePractice.data.Kit;
 import me.itsglobally.circlePractice.data.PracticePlayer;
 import me.itsglobally.circlePractice.utils.MessageUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class DuelManager {
-    
+
     private final CirclePractice plugin;
     private final Map<UUID, Duel> duels;
     private final Map<UUID, UUID> duelRequests; // requester -> target
     private final Map<UUID, String> duelRequestsKit;
+
     public DuelManager(CirclePractice plugin) {
         this.plugin = plugin;
         this.duelRequestsKit = new HashMap<>();
         this.duels = new HashMap<>();
         this.duelRequests = new HashMap<>();
     }
-    
+
     public void sendDuelRequest(Player requester, Player target, String kit) {
         UUID requesterUuid = requester.getUniqueId();
         PracticePlayer PP = plugin.getPlayerManager().getPlayer(requesterUuid);
 
         if (PP.getState() != PracticePlayer.PlayerState.SPAWN) {
             MessageUtil.sendActionBar(requester, "&cYou are not in the spawn!");
-            requester.playSound(requester.getLocation(), Sound.ENDERMAN_TELEPORT,1.0f, 1.0f);
+            requester.playSound(requester.getLocation(), Sound.ENDERMAN_TELEPORT, 1.0f, 1.0f);
             duelRequests.remove(requesterUuid);
             return;
         }
 
         UUID targetUuid = target.getUniqueId();
-        
+
         duelRequests.put(requesterUuid, targetUuid);
         duelRequestsKit.put(requesterUuid, kit);
         MessageUtil.sendMessage(requester, "&aYou sent a duel request to &e" + target.getName() + " &afor kit &e" + kit);
         MessageUtil.sendMessage(target, "&e" + requester.getName() + " &ahas sent you a duel request for kit &e" + kit);
         MessageUtil.sendMessage(target, "&aType &e/accept &ato accept the duel!");
-        
+
         // Remove request after 30 seconds
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             if (duelRequests.get(requesterUuid) != null && duelRequests.get(requesterUuid).equals(targetUuid)) {
@@ -57,11 +58,11 @@ public class DuelManager {
             }
         }, 600L); // 30 seconds
     }
-    
+
     public void acceptDuel(Player accepter) {
         UUID accepterUuid = accepter.getUniqueId();
         UUID requesterUuid = null;
-        
+
         // Find the requester
         for (Map.Entry<UUID, UUID> entry : duelRequests.entrySet()) {
             if (entry.getValue().equals(accepterUuid)) {
@@ -69,12 +70,12 @@ public class DuelManager {
                 break;
             }
         }
-        
+
         if (requesterUuid == null) {
             MessageUtil.sendMessage(accepter, "&cYou don't have any pending duel requests!");
             return;
         }
-        
+
         Player requester = Bukkit.getPlayer(requesterUuid);
         if (requester == null || !requester.isOnline()) {
             MessageUtil.sendMessage(accepter, "&cThe player who sent you the duel request is no longer online!");
@@ -86,31 +87,31 @@ public class DuelManager {
 
         if (PP.getState() != PracticePlayer.PlayerState.SPAWN) {
             MessageUtil.sendMessage(accepter, "&cThe player is not in the spawn!");
-            accepter.playSound(accepter.getLocation(), Sound.ENDERMAN_TELEPORT,1.0f, 1.0f);
+            accepter.playSound(accepter.getLocation(), Sound.ENDERMAN_TELEPORT, 1.0f, 1.0f);
             duelRequests.remove(requesterUuid);
             return;
         }
 
         // Remove the request
         duelRequests.remove(requesterUuid);
-        
+
         // Start the duel
         startDuel(requester, accepter, duelRequestsKit.get(requesterUuid));
     }
-    
+
     public void startDuel(Player player1, Player player2, String kit) {
         PracticePlayer pp1 = plugin.getPlayerManager().getPlayer(player1);
         PracticePlayer pp2 = plugin.getPlayerManager().getPlayer(player2);
         // Check if players are available
-        if (pp1.getState() != PracticePlayer.PlayerState.SPAWN || 
-            pp2.getState() != PracticePlayer.PlayerState.SPAWN) {
+        if (pp1.getState() != PracticePlayer.PlayerState.SPAWN ||
+                pp2.getState() != PracticePlayer.PlayerState.SPAWN) {
             MessageUtil.sendMessage(player1, "&cOne of the players is not available for a duel!");
             MessageUtil.sendMessage(player2, "&cOne of the players is not available for a duel!");
             pp1.setState(PracticePlayer.PlayerState.SPAWN);
             pp2.setState(PracticePlayer.PlayerState.SPAWN);
             return;
         }
-        
+
         // Get available arena
         Arena arena = plugin.getArenaManager().getAvailableArena();
         if (arena == null) {
@@ -120,28 +121,28 @@ public class DuelManager {
             pp2.setState(PracticePlayer.PlayerState.SPAWN);
             return;
         }
-        
+
         // Create duel
         Duel duel = new Duel(pp1, pp2, kit, arena);
         duels.put(duel.getId(), duel);
-        
+
         // Set player states
         pp1.setState(PracticePlayer.PlayerState.DUEL);
         pp2.setState(PracticePlayer.PlayerState.DUEL);
         pp1.setCurrentDuel(duel);
         pp2.setCurrentDuel(duel);
-        
+
         // Mark arena as in use
         arena.setInUse(true);
-        
+
         // Save inventories
         pp1.saveInventory(player1);
         pp2.saveInventory(player2);
-        
+
         // Teleport players
         player1.teleport(arena.getPos1());
         player2.teleport(arena.getPos2());
-        
+
         // Apply kit
         plugin.getKitManager().applyKit(player1, kit);
         plugin.getKitManager().applyKit(player2, kit);
@@ -187,11 +188,10 @@ public class DuelManager {
         }*/
 
 
-
         // Start countdown
         startCountdown(duel);
     }
-    
+
     private void startCountdown(Duel duel) {
         new BukkitRunnable() {
             @Override
@@ -200,7 +200,7 @@ public class DuelManager {
                     cancel();
                     return;
                 }
-                
+
                 Player p1 = Bukkit.getPlayer(duel.getPlayer1().getUuid());
                 Player p2 = Bukkit.getPlayer(duel.getPlayer2().getUuid());
 
@@ -213,7 +213,7 @@ public class DuelManager {
                     cancel();
                     return;
                 }
-                
+
                 int countdown = duel.getCountdown();
                 if (countdown > 0) {
                     MessageUtil.sendMessage(p1, "&eDuel starting in &c" + countdown + "&e...");
@@ -230,10 +230,10 @@ public class DuelManager {
             }
         }.runTaskTimer(plugin, 0L, 20L);
     }
-    
+
     public void endDuel(Duel duel, PracticePlayer winner) {
         duel.setState(Duel.DuelState.FINISHED);
-        
+
         Player p1 = Bukkit.getPlayer(duel.getPlayer1().getUuid());
         Player p2 = Bukkit.getPlayer(duel.getPlayer2().getUuid());
 
@@ -242,10 +242,10 @@ public class DuelManager {
         duel.getPlayer2().setState(PracticePlayer.PlayerState.SPAWN);
         duel.getPlayer1().setCurrentDuel(null);
         duel.getPlayer2().setCurrentDuel(null);
-        
+
         // Free arena
         duel.getArena().setInUse(false);
-        
+
         // Teleport to spawn and restore inventories
         if (p1 != null) {
             plugin.getConfigManager().teleportToSpawn(p1);
@@ -255,32 +255,32 @@ public class DuelManager {
             plugin.getConfigManager().teleportToSpawn(p2);
             duel.getPlayer2().restoreInventory(p2);
         }
-        
+
         // Announce winner
         if (winner != null) {
             String winnerName = winner.getName();
             String loserName = duel.getOpponent(winner).getName();
-            
+
             if (p1 != null) MessageUtil.sendMessage(p1, "&e" + winnerName + " &awon the duel!");
             if (p2 != null) MessageUtil.sendMessage(p2, "&e" + winnerName + " &awon the duel!");
-            
+
             // Update stats in file storage
             boolean p1Won = winner.equals(duel.getPlayer1());
             int eloChange = calculateEloChange(duel.getPlayer1(), duel.getPlayer2(), p1Won);
-            
+
             plugin.getFileDataManager().updatePlayerStats(winner.getUuid(), duel.getKit(), true, eloChange);
             plugin.getFileDataManager().updatePlayerStats(duel.getOpponent(winner).getUuid(), duel.getKit(), false, -eloChange);
         }
-        
+
         // Remove duel
         duels.remove(duel.getId());
     }
-    
+
     private int calculateEloChange(PracticePlayer p1, PracticePlayer p2, boolean p1Won) {
         // Basic ELO calculation - can be improved
         return 25;
     }
-    
+
     public Duel getDuel(UUID playerId) {
         for (Duel duel : duels.values()) {
             if (duel.containsPlayer(playerId)) {
@@ -289,11 +289,11 @@ public class DuelManager {
         }
         return null;
     }
-    
+
     public boolean hasPendingRequest(UUID playerId) {
         return duelRequests.containsValue(playerId);
     }
-    
+
     public Map<UUID, Duel> getAllDuels() {
         return duels;
     }

@@ -9,42 +9,41 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 
 public class InventoryListener implements Listener {
-    
+
     private final CirclePractice plugin;
-    
+
     public InventoryListener(CirclePractice plugin) {
         this.plugin = plugin;
     }
-    
+
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
-        if (!(event.getPlayer() instanceof Player)) return;
-        
-        Player player = (Player) event.getPlayer();
+        if (!(event.getPlayer() instanceof Player player)) return;
+
         PracticePlayer practicePlayer = plugin.getPlayerManager().getPlayer(player);
-        
+
         if (practicePlayer != null && practicePlayer.getState() == PracticePlayer.PlayerState.EDITING) {
             // Save kit contents
             String kit = practicePlayer.getQueuedKit(); // Get the kit being edited
             if (kit != null) {
-                practicePlayer.saveKitContents(kit, 
-                    player.getInventory().getContents(), 
-                    player.getInventory().getArmorContents());
-                
+                practicePlayer.saveKitContents(kit,
+                        player.getInventory().getContents(),
+                        player.getInventory().getArmorContents());
+
                 // Also save to file storage
                 plugin.getFileDataManager().saveKitContents(
-                    player.getUniqueId(), 
-                    kit, 
-                    me.itsglobally.circlePractice.utils.InventorySerializer.serializeInventory(
-                        player.getInventory().getContents(),
-                        player.getInventory().getArmorContents()
-                    )
+                        player.getUniqueId(),
+                        kit,
+                        me.itsglobally.circlePractice.utils.InventorySerializer.serializeInventory(
+                                player.getInventory().getContents(),
+                                player.getInventory().getArmorContents()
+                        )
                 );
-                
+
                 MessageUtil.sendMessage(player, "&aKit &e" + kit + " &asaved successfully!");
                 player.getInventory().clear();
             }
-            
+
             practicePlayer.setState(PracticePlayer.PlayerState.SPAWN);
         }
     }

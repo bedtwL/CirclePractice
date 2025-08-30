@@ -6,16 +6,17 @@ import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class FileDataManager {
 
     private final CirclePractice plugin;
-    private FileConfiguration playerData;
-    private File playerDataFile;
-
     // cache system
     private final Map<UUID, CachedPlayerData> cache = new HashMap<>();
+    private FileConfiguration playerData;
+    private File playerDataFile;
 
     public FileDataManager(CirclePractice plugin) {
         this.plugin = plugin;
@@ -91,9 +92,9 @@ public class FileDataManager {
         // Save duel stats
         for (Map.Entry<String, PlayerStats> entry : data.getStats().entrySet()) {
             String kitPath = path + ".stats." + entry.getKey();
-            playerData.set(kitPath + ".wins", entry.getValue().getWins());
-            playerData.set(kitPath + ".losses", entry.getValue().getLosses());
-            playerData.set(kitPath + ".elo", entry.getValue().getElo());
+            playerData.set(kitPath + ".wins", entry.getValue().wins());
+            playerData.set(kitPath + ".losses", entry.getValue().losses());
+            playerData.set(kitPath + ".elo", entry.getValue().elo());
         }
 
         // Save kits
@@ -103,8 +104,8 @@ public class FileDataManager {
 
         // Save FFA stats
         FfaStats ffa = data.getFfaStats();
-        playerData.set(path + ".ffa.kills", ffa.getKills());
-        playerData.set(path + ".ffa.deaths", ffa.getDeaths());
+        playerData.set(path + ".ffa.kills", ffa.kills());
+        playerData.set(path + ".ffa.deaths", ffa.deaths());
 
         savePlayerDataFile();
     }
@@ -131,9 +132,9 @@ public class FileDataManager {
         PlayerStats stats = data.getStats().getOrDefault(kit, new PlayerStats());
 
         if (won) {
-            stats = new PlayerStats(stats.getWins() + 1, stats.getLosses(), stats.getElo() + eloChange);
+            stats = new PlayerStats(stats.wins() + 1, stats.losses(), stats.elo() + eloChange);
         } else {
-            stats = new PlayerStats(stats.getWins(), stats.getLosses() + 1, stats.getElo() + eloChange);
+            stats = new PlayerStats(stats.wins(), stats.losses() + 1, stats.elo() + eloChange);
         }
 
         data.getStats().put(kit, stats);
@@ -160,8 +161,8 @@ public class FileDataManager {
         CachedPlayerData data = getCachedData(uuid);
         FfaStats ffa = data.getFfaStats();
 
-        long newKills = ffa.getKills() + kills;
-        long newDeaths = ffa.getDeaths() + deaths;
+        long newKills = ffa.kills() + kills;
+        long newDeaths = ffa.deaths() + deaths;
 
         data.setFfaStats(new FfaStats(newKills, newDeaths));
     }
@@ -185,58 +186,34 @@ public class FileDataManager {
 
     // ----------------- Inner Classes -----------------
 
-    public static class PlayerStats {
-        private final int wins;
-        private final int losses;
-        private final int elo;
+    public record PlayerStats(int wins, int losses, int elo) {
+            public PlayerStats() {
+                this(0, 0, 1000);
+            }
 
-        public PlayerStats() {
-            this(0, 0, 1000);
-        }
-
-        public PlayerStats(int wins, int losses, int elo) {
-            this.wins = wins;
-            this.losses = losses;
-            this.elo = elo;
-        }
-
-        public int getWins() { return wins; }
-        public int getLosses() { return losses; }
-        public int getElo() { return elo; }
         public double getWinRate() {
-            int total = wins + losses;
-            return total == 0 ? 0.0 : (double) wins / total * 100;
-        }
-    }
-
-    public static class FfaStats {
-        private final long kills;
-        private final long deaths;
-
-        public FfaStats() {
-            this(0, 0);
+                int total = wins + losses;
+                return total == 0 ? 0.0 : (double) wins / total * 100;
+            }
         }
 
-        public FfaStats(long kills, long deaths) {
-            this.kills = kills;
-            this.deaths = deaths;
-        }
+    public record FfaStats(long kills, long deaths) {
+            public FfaStats() {
+                this(0, 0);
+            }
 
-        public long getKills() { return kills; }
-        public long getDeaths() { return deaths; }
         public double getKDR() {
-            return deaths == 0 ? kills : (double) kills / deaths;
+                return deaths == 0 ? kills : (double) kills / deaths;
+            }
         }
-    }
 
     public static class CachedPlayerData {
         private final UUID uuid;
+        private final Map<String, PlayerStats> stats = new HashMap<>();
+        private final Map<String, String> kits = new HashMap<>();
         private String name;
         private long firstJoin;
         private long lastSeen;
-        private final Map<String, PlayerStats> stats = new HashMap<>();
-        private final Map<String, String> kits = new HashMap<>();
-
         // NEW: FFA stats
         private FfaStats ffaStats = new FfaStats();
 
@@ -245,17 +222,48 @@ public class FileDataManager {
             this.name = name;
         }
 
-        public UUID getUuid() { return uuid; }
-        public String getName() { return name; }
-        public void setName(String name) { this.name = name; }
-        public long getFirstJoin() { return firstJoin; }
-        public void setFirstJoin(long firstJoin) { this.firstJoin = firstJoin; }
-        public long getLastSeen() { return lastSeen; }
-        public void setLastSeen(long lastSeen) { this.lastSeen = lastSeen; }
-        public Map<String, PlayerStats> getStats() { return stats; }
-        public Map<String, String> getKits() { return kits; }
+        public UUID getUuid() {
+            return uuid;
+        }
 
-        public FfaStats getFfaStats() { return ffaStats; }
-        public void setFfaStats(FfaStats ffaStats) { this.ffaStats = ffaStats; }
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+        public long getFirstJoin() {
+            return firstJoin;
+        }
+
+        public void setFirstJoin(long firstJoin) {
+            this.firstJoin = firstJoin;
+        }
+
+        public long getLastSeen() {
+            return lastSeen;
+        }
+
+        public void setLastSeen(long lastSeen) {
+            this.lastSeen = lastSeen;
+        }
+
+        public Map<String, PlayerStats> getStats() {
+            return stats;
+        }
+
+        public Map<String, String> getKits() {
+            return kits;
+        }
+
+        public FfaStats getFfaStats() {
+            return ffaStats;
+        }
+
+        public void setFfaStats(FfaStats ffaStats) {
+            this.ffaStats = ffaStats;
+        }
     }
 }

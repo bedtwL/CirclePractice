@@ -1,7 +1,6 @@
 package me.itsglobally.circlePractice.listeners;
 
 import me.itsglobally.circlePractice.CirclePractice;
-import me.itsglobally.circlePractice.data.Arena;
 import me.itsglobally.circlePractice.data.PracticePlayer;
 import me.itsglobally.circlePractice.data.TempData;
 import me.itsglobally.circlePractice.utils.MessageUtil;
@@ -23,21 +22,22 @@ import java.util.List;
 public class FFAListener implements Listener {
 
     private final CirclePractice plugin;
+    List<Location> blockplaced = new ArrayList<>();
 
     public FFAListener(CirclePractice plugin) {
         this.plugin = plugin;
     }
 
-    List<Location> blockplaced = new ArrayList<>();
-
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e) {
 
     }
+
     @EventHandler
     public void onBlockBreak(BlockBreakEvent e) {
 
     }
+
     @EventHandler
     public void onDamage(EntityDamageEvent e) {
         if (e.getCause() == EntityDamageEvent.DamageCause.FALL) {
@@ -67,6 +67,7 @@ public class FFAListener implements Listener {
             }
         }
     }
+
     @EventHandler
     public void onPlace(BlockPlaceEvent e) {
         Player player = e.getPlayer();
@@ -84,7 +85,6 @@ public class FFAListener implements Listener {
             }
             blockplaced.add(e.getBlockPlaced().getLocation());
             new BukkitRunnable() {
-
                 @Override
                 public void run() {
                     e.getBlockPlaced().setType(Material.AIR);
@@ -101,7 +101,7 @@ public class FFAListener implements Listener {
         if (pP.getState() == PracticePlayer.PlayerState.FFA) {
             if (e.getBlock().getY() <= 200) {
                 e.setCancelled(true);
-                MessageUtil.sendActionBar(player, "&cYou cannot breaj blocks here!");
+                MessageUtil.sendActionBar(player, "&cYou cannot break blocks here!");
             }
             if (!blockplaced.contains(e.getBlock().getLocation())) {
                 e.setCancelled(true);
