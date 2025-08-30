@@ -41,6 +41,8 @@ public class CirclePractice extends JavaPlugin {
         return adventure.player(player);
     }
 
+    public static String serverName = "practice";
+
     @Override
     public void onEnable() {
 
@@ -59,27 +61,29 @@ public class CirclePractice extends JavaPlugin {
 
         instance = this;
 
+        initManagers();
+
+        NontageCommandLoader.registerAll(this);
+        ListenerRegister.registerAll(this);
+        getLogger().info("CirclePractice has been enabled!");
+    }
+
+    private void initManagers() {
         luckPerms = LuckPermsProvider.get();
         adventure = BukkitAudiences.create(this);
 
-        // Initialize configuration
         configManager = new ConfigManager(this);
         configManager.setupConfig();
 
-        // Initialize file data manager
         fileDataManager = new FileDataManager(this);
         fileDataManager.initialize();
 
-        // Initialize managers
         playerManager = new PlayerManager(this);
         arenaManager = new ArenaManager(this);
         kitManager = new KitManager(this);
         duelManager = new DuelManager(this);
         queueManager = new QueueManager(this);
         ffaManager = new FFAManager(this);
-        NontageCommandLoader.registerAll(this);
-        ListenerRegister.registerAll(this);
-        getLogger().info("CirclePractice has been enabled!");
     }
 
     @Override

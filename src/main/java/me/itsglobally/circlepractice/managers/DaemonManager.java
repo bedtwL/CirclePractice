@@ -2,11 +2,13 @@ package me.itsglobally.circlePractice.managers;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import me.itsglobally.circlePractice.CirclePractice;
 import org.bukkit.Bukkit;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
 import java.net.URI;
+import java.util.Objects;
 
 public class DaemonManager extends WebSocketClient {
     private final Gson gson = new Gson();
@@ -15,46 +17,66 @@ public class DaemonManager extends WebSocketClient {
         super(serverUri);
     }
 
-    private static JsonObject basic(String code) {
+    private static final String serverName = CirclePractice.serverName;
+
+    private JsonObject responseBasic(String target) {
         JsonObject obj = new JsonObject();
-        obj.addProperty("server", "smp");
-        if (code != null) {
-            obj.addProperty("code", "0");
-        }
+        obj.addProperty("server", serverName);
+        obj.addProperty("target", target);
+        obj.addProperty("messagecode", 2);
+        return obj;
+    }
+    private void error(String message, String target) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("server", serverName);
+        obj.addProperty("target", target);
+        obj.addProperty("messagecode", 3);
+        send(gson.toJson(obj));
+    }
+    private void unknowncmd(String target) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("server", serverName);
+        obj.addProperty("target", target);
+        obj.addProperty("messagecode", 4);
+        send(gson.toJson(obj));
+    }
+    private JsonObject sendBasic(String message, String target) {
+        JsonObject obj = new JsonObject();
+        obj.addProperty("server", serverName);
+        obj.addProperty("target", "all");
+        obj.addProperty("messagecode", 1);
         return obj;
     }
 
-    private static JsonObject basic() {
-        JsonObject obj = new JsonObject();
-        obj.addProperty("server", "smp");
-        obj.addProperty("code", "0");
-        return obj;
-    }
+
 
     @Override
     public void onOpen(ServerHandshake handshakedata) {
         Bukkit.getLogger().info("Connected to server");
-        JsonObject obj = basic(null);
-        obj.addProperty("message", "connected");
-        send(gson.toJson(obj));
     }
 
     @Override
     public void onMessage(String message) {
+        JsonObject json = gson.fromJson(message, JsonObject.class);
+        String server = json.has("server") ? json.get("server").getAsString() : "";
+        String target = json.has("target") ? json.get("target").getAsString() : "";
+        String cmd = json.has("cmd") ? json.get("cmd").getAsString() : "";
+        Long messageId = json.has("id") ? json.get("id").getAsLong() : 0L;
+        if (cmd.isEmpty()) return;
+        if (!Objects.equals(target, serverName)) return;
         try {
-            JsonObject json = gson.fromJson(message, JsonObject.class);
-            String server = json.has("server") ? json.get("server").getAsString() : "";
-            String cmd = json.has("cmd") ? json.get("cmd").getAsString() : "";
-            if (cmd.isEmpty()) return;
             switch (cmd) {
-                default:
+                case "rualive" -> {
+                    JsonObject jo = responseBasic(server);
+                    jo.addProperty("alive", true);
+                    send(gson.toJson(jo));
+                }
+                default -> unknowncmd(server);
             }
         } catch (Exception e) {
-            Bukkit.getLogger().info("Invalid JSON: " + message);
+            Bukkit.getLogger().warning("Error while processing message: " + message);
             e.printStackTrace();
-            JsonObject obj = basic(null);
-            obj.addProperty("message", e.getMessage());
-            send(gson.toJson(obj));
+            error(e.getMessage(), server);
         }
     }
 
