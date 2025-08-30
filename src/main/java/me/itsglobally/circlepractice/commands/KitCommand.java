@@ -3,30 +3,27 @@ package me.itsglobally.circlePractice.commands;
 import me.itsglobally.circlePractice.CirclePractice;
 import me.itsglobally.circlePractice.data.PracticePlayer;
 import me.itsglobally.circlePractice.utils.MessageUtil;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import top.nontage.nontagelib.annotations.CommandInfo;
+import top.nontage.nontagelib.command.NontageCommand;
 
-public class KitCommand implements CommandExecutor {
+@CommandInfo(name = "kit", description = "ga")
+public class KitCommand implements NontageCommand {
 
-    private final CirclePractice plugin;
-
-    public KitCommand(CirclePractice plugin) {
-        this.plugin = plugin;
-    }
+    private final CirclePractice plugin = CirclePractice.getInstance();
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public void execute(CommandSender sender, String s, String[] args) {
         if (!(sender instanceof Player player)) {
             sender.sendMessage("This command can only be used by players!");
-            return true;
+            return;
         }
 
         if (args.length == 0) {
             MessageUtil.sendMessage(player, "&cUsage: /kit <editor|load> [kit]");
-            return true;
+            return;
         }
 
         String subCommand = args[0];
@@ -34,13 +31,13 @@ public class KitCommand implements CommandExecutor {
         if (subCommand.equalsIgnoreCase("editor")) {
             if (args.length != 2) {
                 MessageUtil.sendMessage(player, "&cUsage: /kit editor <kit>");
-                return true;
+                return;
             }
 
             String kit = args[1];
             if (!plugin.getKitManager().kitExists(kit)) {
                 MessageUtil.sendMessage(player, "&cThat kit doesn't exist!");
-                return true;
+                return;
             }
 
             PracticePlayer practicePlayer = plugin.getPlayerManager().getPlayer(player);
@@ -74,7 +71,7 @@ public class KitCommand implements CommandExecutor {
         } else if (subCommand.equalsIgnoreCase("load")) {
             if (args.length != 2) {
                 MessageUtil.sendMessage(player, "&cUsage: /kit load <kit>");
-                return true;
+                return;
             }
 
             String kit = args[1];
@@ -103,6 +100,5 @@ public class KitCommand implements CommandExecutor {
             }
         }
 
-        return true;
     }
 }

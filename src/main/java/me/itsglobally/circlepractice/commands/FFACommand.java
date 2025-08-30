@@ -4,32 +4,27 @@ import me.itsglobally.circlePractice.CirclePractice;
 import me.itsglobally.circlePractice.data.FileDataManager;
 import me.itsglobally.circlePractice.data.TempData;
 import me.itsglobally.circlePractice.utils.MessageUtil;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import top.nontage.nontagelib.command.NontageCommand;
 
-public class FFACommand implements CommandExecutor {
+public class FFACommand implements NontageCommand {
 
-    private final CirclePractice plugin;
-
-    public FFACommand(CirclePractice plugin) {
-        this.plugin = plugin;
-    }
+    private final CirclePractice plugin = CirclePractice.getInstance();
 
 
     @Override
-    public boolean onCommand(CommandSender commandSender, Command command, String s, String[] strings) {
-        if (!(commandSender instanceof Player p)) {
-            return true;
+    public void execute(CommandSender sender, String s, String[] args) {
+        if (!(sender instanceof Player p)) {
+            return;
         }
 
-        if (strings.length < 1) {
+        if (args.length < 1) {
             MessageUtil.sendMessage(p, "&c/ffa [join/leave/build/stats]");
-            return true;
+            return;
         }
 
-        switch (strings[0]) {
+        switch (args[0]) {
             case "join" -> {
                 plugin.getFFAManager().joinFFA(p);
             }
@@ -42,14 +37,11 @@ public class FFACommand implements CommandExecutor {
             }
             case "stats" -> {
                 FileDataManager.FfaStats stats = plugin.getFileDataManager().getFfaStats(p.getUniqueId());
-                MessageUtil.sendMessage(p, "&cKills&r:" + stats.getKills() + "\n&cDeaths&r: " + stats.getDeaths());
+                MessageUtil.sendMessage(p, "&cKills&r:" + stats.kills() + "\n&cDeaths&r: " + stats.deaths());
             }
             default -> {
                 MessageUtil.sendMessage(p, "&c/ffa [join/leave/build/stats]");
-                return true;
             }
         }
-
-        return true;
     }
 }

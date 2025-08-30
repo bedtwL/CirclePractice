@@ -14,6 +14,8 @@ import net.luckperms.api.LuckPermsProvider;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import top.nontage.nontagelib.command.NontageCommandLoader;
+import top.nontage.nontagelib.listener.ListenerRegister;
 
 import java.net.URI;
 
@@ -55,9 +57,10 @@ public class CirclePractice extends JavaPlugin {
             getLogger().info("reg papi");
         }
 
+        instance = this;
+
         luckPerms = LuckPermsProvider.get();
         adventure = BukkitAudiences.create(this);
-        instance = this;
 
         // Initialize configuration
         configManager = new ConfigManager(this);
@@ -74,12 +77,8 @@ public class CirclePractice extends JavaPlugin {
         duelManager = new DuelManager(this);
         queueManager = new QueueManager(this);
         ffaManager = new FFAManager(this);
-        // Register commands
-        registerCommands();
-
-        // Register events
-        registerEvents();
-
+        NontageCommandLoader.registerAll(this);
+        ListenerRegister.registerAll(this);
         getLogger().info("CirclePractice has been enabled!");
     }
 
@@ -87,25 +86,6 @@ public class CirclePractice extends JavaPlugin {
     public void onDisable() {
         getFileDataManager().saveAllCached();
         getLogger().info("CirclePractice has been disabled!");
-    }
-
-    private void registerCommands() {
-        getCommand("duel").setExecutor(new DuelCommand(this));
-        getCommand("accept").setExecutor(new AcceptCommand(this));
-        getCommand("queue").setExecutor(new QueueCommand(this));
-        getCommand("leave").setExecutor(new LeaveCommand(this));
-        getCommand("stats").setExecutor(new StatsCommand(this));
-        getCommand("leaderboard").setExecutor(new LeaderboardCommand(this));
-        getCommand("spawn").setExecutor(new SpawnCommand(this));
-        getCommand("kit").setExecutor(new KitCommand(this));
-        getCommand("arena").setExecutor(new ArenaCommand(this));
-        getCommand("ffa").setExecutor(new FFACommand(this));
-    }
-
-    private void registerEvents() {
-        Bukkit.getPluginManager().registerEvents(new PlayerListener(this), this);
-        Bukkit.getPluginManager().registerEvents(new DuelListener(this), this);
-        Bukkit.getPluginManager().registerEvents(new InventoryListener(this), this);
     }
 
     public FileDataManager getFileDataManager() {

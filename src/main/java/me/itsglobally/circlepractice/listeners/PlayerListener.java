@@ -18,7 +18,9 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 import java.util.ArrayList;
 import java.util.List;
+import top.nontage.nontagelib.annotations.AutoListener;
 
+@AutoListener
 public class PlayerListener implements Listener {
 
     private final CirclePractice plugin;

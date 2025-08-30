@@ -4,24 +4,21 @@ import me.itsglobally.circlePractice.CirclePractice;
 import me.itsglobally.circlePractice.data.FileDataManager;
 import me.itsglobally.circlePractice.utils.MessageUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import top.nontage.nontagelib.annotations.CommandInfo;
+import top.nontage.nontagelib.command.NontageCommand;
 
-public class StatsCommand implements CommandExecutor {
+@CommandInfo(name = "stats", description = "ga")
+public class StatsCommand implements NontageCommand {
 
-    private final CirclePractice plugin;
-
-    public StatsCommand(CirclePractice plugin) {
-        this.plugin = plugin;
-    }
+    private final CirclePractice plugin = CirclePractice.getInstance();
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public void execute(CommandSender sender, String s, String[] args) {
         if (!(sender instanceof Player player)) {
             sender.sendMessage("This command can only be used by players!");
-            return true;
+            return;
         }
 
         Player target = player;
@@ -30,7 +27,7 @@ public class StatsCommand implements CommandExecutor {
             target = Bukkit.getPlayer(args[0]);
             if (target == null) {
                 MessageUtil.sendMessage(player, "&cPlayer not found!");
-                return true;
+                return;
             }
         }
 
@@ -43,6 +40,5 @@ public class StatsCommand implements CommandExecutor {
                     " &dWR: " + String.format("%.1f", stats.getWinRate()) + "%");
         }
 
-        return true;
     }
 }

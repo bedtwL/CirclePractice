@@ -7,7 +7,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryCloseEvent;
+import top.nontage.nontagelib.annotations.AutoListener;
 
+@AutoListener
 public class InventoryListener implements Listener {
 
     private final CirclePractice plugin;

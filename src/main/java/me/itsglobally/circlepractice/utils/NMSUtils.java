@@ -25,6 +25,7 @@ public class NMSUtils {
     public static String getVersion() {
         return VERSION;
     }
+
     public static void openPlayerInventory(Player player) {
         try {
             // Get CraftPlayer

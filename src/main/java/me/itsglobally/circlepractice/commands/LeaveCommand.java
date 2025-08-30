@@ -3,24 +3,21 @@ package me.itsglobally.circlePractice.commands;
 import me.itsglobally.circlePractice.CirclePractice;
 import me.itsglobally.circlePractice.data.PracticePlayer;
 import me.itsglobally.circlePractice.utils.MessageUtil;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import top.nontage.nontagelib.annotations.CommandInfo;
+import top.nontage.nontagelib.command.NontageCommand;
 
-public class LeaveCommand implements CommandExecutor {
+@CommandInfo(name = "leave", description = "ga", aliases = {"l"})
+public class LeaveCommand implements NontageCommand {
 
-    private final CirclePractice plugin;
-
-    public LeaveCommand(CirclePractice plugin) {
-        this.plugin = plugin;
-    }
+    private final CirclePractice plugin = CirclePractice.getInstance();
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public void execute(CommandSender sender, String s, String[] args) {
         if (!(sender instanceof Player player)) {
             sender.sendMessage("This command can only be used by players!");
-            return true;
+            return;
         }
 
         PracticePlayer practicePlayer = plugin.getPlayerManager().getPlayer(player);
@@ -36,6 +33,5 @@ public class LeaveCommand implements CommandExecutor {
             MessageUtil.sendMessage(player, "&cYou're not in a queue or duel!");
         }
 
-        return true;
     }
 }

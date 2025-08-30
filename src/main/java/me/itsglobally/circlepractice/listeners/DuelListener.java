@@ -13,7 +13,9 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
+import top.nontage.nontagelib.annotations.AutoListener;
 
+@AutoListener
 public class DuelListener implements Listener {
 
     private final CirclePractice plugin;

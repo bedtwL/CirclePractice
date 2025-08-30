@@ -3,34 +3,31 @@ package me.itsglobally.circlePractice.commands;
 import me.itsglobally.circlePractice.CirclePractice;
 import me.itsglobally.circlePractice.data.Arena;
 import me.itsglobally.circlePractice.utils.MessageUtil;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import top.nontage.nontagelib.annotations.CommandInfo;
+import top.nontage.nontagelib.command.NontageCommand;
 
-public class ArenaCommand implements CommandExecutor {
+@CommandInfo(name = "arena", description = "ga")
+public class ArenaCommand implements NontageCommand {
 
-    private final CirclePractice plugin;
-
-    public ArenaCommand(CirclePractice plugin) {
-        this.plugin = plugin;
-    }
+    private final CirclePractice plugin = CirclePractice.getInstance();
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public void execute(CommandSender sender, String s, String[] args) {
         if (!(sender instanceof Player player)) {
             sender.sendMessage("This command can only be used by players!");
-            return true;
+            return;
         }
 
         if (!player.hasPermission("circlepractice.admin")) {
             MessageUtil.sendMessage(player, "&cYou don't have permission to use this command!");
-            return true;
+            return;
         }
 
         if (args.length == 0) {
             MessageUtil.sendMessage(player, "&cUsage: /arena <create|delete|list|setpos1|setpos2|setspectator> [name]");
-            return true;
+            return;
         }
 
         String subCommand = args[0];
@@ -39,7 +36,7 @@ public class ArenaCommand implements CommandExecutor {
 
             if (args.length < 3) {
                 MessageUtil.sendMessage(player, "&cUsage: /arena create <name> <canBuild>");
-                return true;
+                return;
             }
 
             String name = args[1];
@@ -56,7 +53,7 @@ public class ArenaCommand implements CommandExecutor {
         } else if (subCommand.equalsIgnoreCase("delete")) {
             if (args.length != 2) {
                 MessageUtil.sendMessage(player, "&cUsage: /arena delete <name>");
-                return true;
+                return;
             }
 
             String name = args[1];
@@ -73,14 +70,14 @@ public class ArenaCommand implements CommandExecutor {
         } else if (subCommand.equalsIgnoreCase("setpos1")) {
             if (args.length != 2) {
                 MessageUtil.sendMessage(player, "&cUsage: /arena setpos1 <name>");
-                return true;
+                return;
             }
 
             String name = args[1];
             Arena arena = plugin.getArenaManager().getArena(name);
             if (arena == null) {
                 MessageUtil.sendMessage(player, "&cArena not found!");
-                return true;
+                return;
             }
 
             arena.setPos1(player.getLocation());
@@ -90,14 +87,14 @@ public class ArenaCommand implements CommandExecutor {
         } else if (subCommand.equalsIgnoreCase("setpos2")) {
             if (args.length != 2) {
                 MessageUtil.sendMessage(player, "&cUsage: /arena setpos2 <name>");
-                return true;
+                return;
             }
 
             String name = args[1];
             Arena arena = plugin.getArenaManager().getArena(name);
             if (arena == null) {
                 MessageUtil.sendMessage(player, "&cArena not found!");
-                return true;
+                return;
             }
 
             arena.setPos2(player.getLocation());
@@ -107,21 +104,19 @@ public class ArenaCommand implements CommandExecutor {
         } else if (subCommand.equalsIgnoreCase("setspectator")) {
             if (args.length != 2) {
                 MessageUtil.sendMessage(player, "&cUsage: /arena setspectator <name>");
-                return true;
+                return;
             }
 
             String name = args[1];
             Arena arena = plugin.getArenaManager().getArena(name);
             if (arena == null) {
                 MessageUtil.sendMessage(player, "&cArena not found!");
-                return true;
+                return;
             }
 
             arena.setSpectatorSpawn(player.getLocation());
             plugin.getArenaManager().saveArena(arena);
             MessageUtil.sendMessage(player, "&aSet spectator spawn for arena &e" + name + "&a!");
         }
-
-        return true;
     }
 }

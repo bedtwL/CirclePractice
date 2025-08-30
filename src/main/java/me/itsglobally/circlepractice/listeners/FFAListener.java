@@ -18,7 +18,9 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.util.ArrayList;
 import java.util.List;
+import top.nontage.nontagelib.annotations.AutoListener;
 
+@AutoListener
 public class FFAListener implements Listener {
 
     private final CirclePractice plugin;
