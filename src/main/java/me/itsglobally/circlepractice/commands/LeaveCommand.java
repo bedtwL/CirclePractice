@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import top.nontage.nontagelib.annotations.CommandInfo;
 import top.nontage.nontagelib.command.NontageCommand;
 
-@CommandInfo(name = "leave", description = "ga", aliases = {"l"})
+@CommandInfo(name = "leave", description = "ga", aliases = {"l"}, override = true, shouldLoad = true)
 public class LeaveCommand implements NontageCommand {
 
     private final CirclePractice plugin = CirclePractice.getInstance();

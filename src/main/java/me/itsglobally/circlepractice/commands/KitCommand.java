@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import top.nontage.nontagelib.annotations.CommandInfo;
 import top.nontage.nontagelib.command.NontageCommand;
 
-@CommandInfo(name = "kit", description = "ga")
+@CommandInfo(name = "kit", description = "ga", override = true, shouldLoad = true)
 public class KitCommand implements NontageCommand {
 
     private final CirclePractice plugin = CirclePractice.getInstance();

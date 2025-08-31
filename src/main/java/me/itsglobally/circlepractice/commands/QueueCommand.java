@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import top.nontage.nontagelib.annotations.CommandInfo;
 import top.nontage.nontagelib.command.NontageCommand;
 
-@CommandInfo(name = "queue", description = "ga")
+@CommandInfo(name = "queue", description = "ga", override = true, shouldLoad = true)
 public class QueueCommand implements NontageCommand {
 
     private final CirclePractice plugin = CirclePractice.getInstance();

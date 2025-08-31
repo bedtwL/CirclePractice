@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import top.nontage.nontagelib.annotations.CommandInfo;
 import top.nontage.nontagelib.command.NontageCommand;
 
-@CommandInfo(name = "accept", description = "ga")
+@CommandInfo(name = "accept", description = "ga", override = true, shouldLoad = true)
 public class AcceptCommand implements NontageCommand {
 
     private final CirclePractice plugin = CirclePractice.getInstance();

@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import top.nontage.nontagelib.annotations.CommandInfo;
 import top.nontage.nontagelib.command.NontageCommand;
 
-@CommandInfo(name = "spawn", description = "ga")
+@CommandInfo(name = "spawn", description = "ga", override = true, shouldLoad = true)
 public class SpawnCommand implements NontageCommand {
 
     private final CirclePractice plugin = CirclePractice.getInstance();

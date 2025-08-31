@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import top.nontage.nontagelib.annotations.CommandInfo;
 import top.nontage.nontagelib.command.NontageCommand;
 
-@CommandInfo(name = "duel", description = "ga")
+@CommandInfo(name = "duel", description = "ga", override = true, shouldLoad = true)
 public class DuelCommand implements NontageCommand {
 
     private final CirclePractice plugin = CirclePractice.getInstance();
