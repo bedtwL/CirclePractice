@@ -23,12 +23,10 @@ import top.nontage.nontagelib.annotations.AutoListener;
 @AutoListener
 public class FFAListener implements Listener {
 
-    private final CirclePractice plugin;
+    private final CirclePractice plugin = CirclePractice.getInstance();
     List<Location> blockplaced = new ArrayList<>();
 
-    public FFAListener(CirclePractice plugin) {
-        this.plugin = plugin;
-    }
+
 
     @EventHandler
     public void onBlockPlace(BlockPlaceEvent e) {

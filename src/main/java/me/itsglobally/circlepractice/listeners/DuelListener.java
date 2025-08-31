@@ -18,11 +18,7 @@ import top.nontage.nontagelib.annotations.AutoListener;
 @AutoListener
 public class DuelListener implements Listener {
 
-    private final CirclePractice plugin;
-
-    public DuelListener(CirclePractice plugin) {
-        this.plugin = plugin;
-    }
+    private final CirclePractice plugin = CirclePractice.getInstance();
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onEntityDamage(EntityDamageEvent event) {

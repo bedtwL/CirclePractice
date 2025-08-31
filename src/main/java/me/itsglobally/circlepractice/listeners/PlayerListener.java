@@ -23,14 +23,9 @@ import top.nontage.nontagelib.annotations.AutoListener;
 @AutoListener
 public class PlayerListener implements Listener {
 
-    private final CirclePractice plugin;
+    private final CirclePractice plugin = CirclePractice.getInstance();
 
     List<Location> blockplaced = new ArrayList<>();
-
-    public PlayerListener(CirclePractice plugin) {
-        this.plugin = plugin;
-    }
-
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
