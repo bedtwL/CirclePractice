@@ -147,47 +147,6 @@ public class DuelManager {
         plugin.getKitManager().applyKit(player1, kit);
         plugin.getKitManager().applyKit(player2, kit);
 
-        /*ItemStack[] saved1 = pp1.getKitContents(kit);
-
-        if (saved1 == null) {
-            String serialized = plugin.getFileDataManager().getKitContents(player1.getUniqueId(), kit);
-            if (serialized != null) {
-                ItemStack[][] deserialized = me.itsglobally.circlePractice.utils.InventorySerializer.deserializeInventory(serialized);
-                if (deserialized != null) {
-                    player1.getInventory().setContents(deserialized[0]);
-                    player1.getInventory().setArmorContents(deserialized[1]);
-                } else {
-                    plugin.getKitManager().applyKit(player1, kit);
-                }
-            } else {
-                plugin.getKitManager().applyKit(player1, kit);
-            }
-        } else {
-            player1.getInventory().setContents(java.util.Arrays.copyOf(saved1, 36));
-            player1.getInventory().setArmorContents(java.util.Arrays.copyOfRange(saved1, 36, 40));
-        }
-
-        ItemStack[] saved2 = pp1.getKitContents(kit);
-
-        if (saved2 == null) {
-            String serialized = plugin.getFileDataManager().getKitContents(player2.getUniqueId(), kit);
-            if (serialized != null) {
-                ItemStack[][] deserialized = me.itsglobally.circlePractice.utils.InventorySerializer.deserializeInventory(serialized);
-                if (deserialized != null) {
-                    player2.getInventory().setContents(deserialized[0]);
-                    player2.getInventory().setArmorContents(deserialized[1]);
-                } else {
-                    plugin.getKitManager().applyKit(player2, kit);
-                }
-            } else {
-                plugin.getKitManager().applyKit(player2, kit);
-            }
-        } else {
-            player2.getInventory().setContents(java.util.Arrays.copyOf(saved2, 36));
-            player2.getInventory().setArmorContents(java.util.Arrays.copyOfRange(saved2, 36, 40));
-        }*/
-
-
         // Start countdown
         startCountdown(duel);
     }

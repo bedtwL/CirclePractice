@@ -8,7 +8,7 @@ import org.bukkit.entity.Player;
 import top.nontage.nontagelib.annotations.CommandInfo;
 import top.nontage.nontagelib.command.NontageCommand;
 
-@CommandInfo(name = "arena", description = "ga", override = true, shouldLoad = true)
+@CommandInfo(name = "arena", description = "ga", override = true, shouldLoad = true, permission = "circlepractice.admin")
 public class ArenaCommand implements NontageCommand {
 
     private final CirclePractice plugin = CirclePractice.getInstance();
@@ -35,19 +35,13 @@ public class ArenaCommand implements NontageCommand {
         if (subCommand.equalsIgnoreCase("create")) {
 
             if (args.length < 3) {
-                MessageUtil.sendMessage(player, "&cUsage: /arena create <name> <canBuild>");
+                MessageUtil.sendMessage(player, "&cUsage: /arena create <name>");
                 return;
             }
 
             String name = args[1];
-            Boolean canBuild = false;
-            try {
-                canBuild = Boolean.getBoolean(args[2]);
-            } catch (Exception e) {
-                e.printStackTrace();
-                MessageUtil.sendMessage(player, "&cUsage: /arena create <name> <canBuild>");
-            }
-            plugin.getArenaManager().createArena(name, canBuild);
+
+            plugin.getArenaManager().createArena(name);
             MessageUtil.sendMessage(player, "&aCreated arena &e" + name + "&a!");
 
         } else if (subCommand.equalsIgnoreCase("delete")) {

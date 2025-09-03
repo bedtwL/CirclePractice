@@ -26,7 +26,7 @@ public class KitManager {
         createDefaultKits();
     }
 
-    private void loadKits() {
+    public void loadKits() {
         FileConfiguration config = plugin.getConfigManager().getKits();
         ConfigurationSection kitsSection = config.getConfigurationSection("kits");
 
@@ -48,6 +48,7 @@ public class KitManager {
 
             kit.setEnabled(kitSection.getBoolean("enabled", true));
             kit.setRanked(kitSection.getBoolean("ranked", true));
+            kit.setCanBuild(kitSection.getBoolean("canBuild", true));
 
             kits.put(name, kit);
         }
@@ -115,6 +116,7 @@ public class KitManager {
             noDebuff.setContents(contents);
             noDebuff.setArmor(armor);
             noDebuff.setRanked(false);
+            noDebuff.setCanBuild(false);
             kits.put("NoDebuff", noDebuff);
         }
         if (!kits.containsKey("FFA")) {
@@ -168,6 +170,7 @@ public class KitManager {
             FFA.setContents(contents);
             FFA.setArmor(armor);
             FFA.setRanked(false);
+            FFA.setCanBuild(true);
             kits.put("FFA", FFA);
         }
         saveKits();
@@ -182,6 +185,7 @@ public class KitManager {
             config.set(path + ".armor", kit.getArmor());
             config.set(path + ".enabled", kit.isEnabled());
             config.set(path + ".ranked", kit.isRanked());
+            config.set(path + ".canBuild", kit.canBuild());
         }
 
         plugin.getConfigManager().saveKits();

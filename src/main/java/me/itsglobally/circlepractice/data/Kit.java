@@ -9,11 +9,13 @@ public class Kit {
     private ItemStack[] armor;
     private boolean enabled;
     private boolean ranked;
+    private boolean canBuild;
 
     public Kit(String name) {
         this.name = name;
         this.enabled = true;
-        this.ranked = true;
+        this.ranked = false;
+        this.canBuild = false;
     }
 
     public String getName() {
@@ -50,5 +52,13 @@ public class Kit {
 
     public void setRanked(boolean ranked) {
         this.ranked = ranked;
+    }
+
+    public boolean canBuild() {
+        return canBuild;
+    }
+
+    public void setCanBuild(boolean canBuild) {
+        this.canBuild = canBuild;
     }
 }

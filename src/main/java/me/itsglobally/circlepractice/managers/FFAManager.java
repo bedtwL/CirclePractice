@@ -8,13 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 
-public class FFAManager {
-
-    private final CirclePractice plugin;
-
-    public FFAManager(CirclePractice plugin) {
-        this.plugin = plugin;
-    }
+public record FFAManager(CirclePractice plugin) {
 
     public void joinFFA(Player p) {
         PracticePlayer pp = plugin.getPlayerManager().getPlayer(p.getUniqueId());

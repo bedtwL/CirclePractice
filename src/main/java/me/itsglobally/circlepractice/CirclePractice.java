@@ -32,6 +32,7 @@ public class CirclePractice extends JavaPlugin {
     private KitManager kitManager;
     private ConfigManager configManager;
     private FFAManager ffaManager;
+    private PluginManager pluginManager;
 
     public static CirclePractice getInstance() {
         return instance;
@@ -84,6 +85,7 @@ public class CirclePractice extends JavaPlugin {
         duelManager = new DuelManager(this);
         queueManager = new QueueManager(this);
         ffaManager = new FFAManager(this);
+        pluginManager = new PluginManager(this);
     }
 
     @Override
@@ -122,6 +124,10 @@ public class CirclePractice extends JavaPlugin {
 
     public FFAManager getFFAManager() {
         return ffaManager;
+    }
+
+    public PluginManager getPluginManager() {
+        return pluginManager;
     }
 
     public LuckPerms getLuckPerms() {

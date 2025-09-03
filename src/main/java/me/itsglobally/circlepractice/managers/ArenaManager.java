@@ -20,7 +20,7 @@ public class ArenaManager {
         loadArenas();
     }
 
-    private void loadArenas() {
+    public void loadArenas() {
         FileConfiguration config = plugin.getConfigManager().getArenas();
         ConfigurationSection arenasSection = config.getConfigurationSection("arenas");
 
@@ -38,20 +38,15 @@ public class ArenaManager {
             }
             if (arenaSection.contains("spectator")) {
                 arena.setSpectatorSpawn(LocationUtil.deserializeLocation(arenaSection.getString("spectator")));
-            }
-            if (arenaSection.contains("canBuild")) {
-                arena.setCanBuild(arenaSection.getBoolean("canBuild"));
             } else {
-                arena.setCanBuild(false); // default false if not set
             }
 
             arenas.put(name, arena);
         }
     }
 
-    public void createArena(String name, boolean canBuild) {
+    public void createArena(String name) {
         Arena arena = new Arena(name);
-        arena.setCanBuild(canBuild); // set the build option
         arenas.put(name, arena);
         saveArena(arena); // save immediately
     }
@@ -77,8 +72,6 @@ public class ArenaManager {
         if (arena.getSpectatorSpawn() != null) {
             config.set(path + ".spectator", LocationUtil.serializeLocation(arena.getSpectatorSpawn()));
         }
-
-        config.set(path + ".canBuild", arena.canBuild()); // save build option
 
         plugin.getConfigManager().saveArenas();
     }

@@ -2,6 +2,8 @@ package me.itsglobally.circlePractice.listeners;
 
 import me.itsglobally.circlePractice.CirclePractice;
 import me.itsglobally.circlePractice.data.Arena;
+import me.itsglobally.circlePractice.data.Duel;
+import me.itsglobally.circlePractice.data.Kit;
 import me.itsglobally.circlePractice.data.PracticePlayer;
 import me.itsglobally.circlePractice.utils.MessageUtil;
 import org.bukkit.Bukkit;
@@ -63,8 +65,9 @@ public class PlayerListener implements Listener {
             MessageUtil.sendActionBar(player, "&cYou cannot place blocks here!");
         }
         if (pP.getState() == PracticePlayer.PlayerState.DUEL) {
-            Arena a = plugin.getPlayerManager().getPlayer(player.getUniqueId()).getCurrentDuel().getArena();
-            if (!a.canBuild()) {
+            Duel cD = plugin.getPlayerManager().getPlayer(player.getUniqueId()).getCurrentDuel();
+            Kit k = plugin.getKitManager().getKit(cD.getKit());
+            if (!k.canBuild()) {
                 e.setCancelled(true);
                 MessageUtil.sendActionBar(player, "&cYou cannot place blocks here!");
                 return;
@@ -88,8 +91,9 @@ public class PlayerListener implements Listener {
             MessageUtil.sendActionBar(player, "&cYou cannot place blocks here!");
         }
         if (pP.getState() == PracticePlayer.PlayerState.DUEL) {
-            Arena a = plugin.getPlayerManager().getPlayer(player.getUniqueId()).getCurrentDuel().getArena();
-            if (!a.canBuild()) {
+            Duel cD = plugin.getPlayerManager().getPlayer(player.getUniqueId()).getCurrentDuel();
+            Kit k = plugin.getKitManager().getKit(cD.getKit());
+            if (!k.canBuild()) {
                 e.setCancelled(true);
                 MessageUtil.sendActionBar(player, "&cYou cannot place blocks here!");
                 return;
