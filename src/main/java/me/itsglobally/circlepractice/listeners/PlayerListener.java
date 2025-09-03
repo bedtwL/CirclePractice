@@ -1,7 +1,6 @@
 package me.itsglobally.circlePractice.listeners;
 
 import me.itsglobally.circlePractice.CirclePractice;
-import me.itsglobally.circlePractice.data.Arena;
 import me.itsglobally.circlePractice.data.Duel;
 import me.itsglobally.circlePractice.data.Kit;
 import me.itsglobally.circlePractice.data.PracticePlayer;
@@ -17,10 +16,10 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import top.nontage.nontagelib.annotations.AutoListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import top.nontage.nontagelib.annotations.AutoListener;
 
 @AutoListener
 public class PlayerListener implements Listener {
@@ -28,6 +27,7 @@ public class PlayerListener implements Listener {
     private final CirclePractice plugin = CirclePractice.getInstance();
 
     List<Location> blockplaced = new ArrayList<>();
+
     @EventHandler
     public void onPlayerJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();

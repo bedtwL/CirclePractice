@@ -15,17 +15,16 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.scheduler.BukkitRunnable;
+import top.nontage.nontagelib.annotations.AutoListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import top.nontage.nontagelib.annotations.AutoListener;
 
 @AutoListener
 public class FFAListener implements Listener {
 
     private final CirclePractice plugin = CirclePractice.getInstance();
     List<Location> blockplaced = new ArrayList<>();
-
 
 
     @EventHandler

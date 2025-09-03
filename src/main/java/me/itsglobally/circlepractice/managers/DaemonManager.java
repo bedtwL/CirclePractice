@@ -11,13 +11,12 @@ import java.net.URI;
 import java.util.Objects;
 
 public class DaemonManager extends WebSocketClient {
+    private static final String serverName = CirclePractice.serverName;
     private final Gson gson = new Gson();
 
     public DaemonManager(URI serverUri) {
         super(serverUri);
     }
-
-    private static final String serverName = CirclePractice.serverName;
 
     private JsonObject responseBasic(String target) {
         JsonObject obj = new JsonObject();
@@ -26,6 +25,7 @@ public class DaemonManager extends WebSocketClient {
         obj.addProperty("messagecode", 2);
         return obj;
     }
+
     private void error(String message, String target) {
         JsonObject obj = new JsonObject();
         obj.addProperty("server", serverName);
@@ -33,6 +33,7 @@ public class DaemonManager extends WebSocketClient {
         obj.addProperty("messagecode", 3);
         send(gson.toJson(obj));
     }
+
     private void unknowncmd(String target) {
         JsonObject obj = new JsonObject();
         obj.addProperty("server", serverName);
@@ -40,6 +41,7 @@ public class DaemonManager extends WebSocketClient {
         obj.addProperty("messagecode", 4);
         send(gson.toJson(obj));
     }
+
     private JsonObject sendBasic(String message, String target) {
         JsonObject obj = new JsonObject();
         obj.addProperty("server", serverName);
@@ -47,7 +49,6 @@ public class DaemonManager extends WebSocketClient {
         obj.addProperty("messagecode", 1);
         return obj;
     }
-
 
 
     @Override

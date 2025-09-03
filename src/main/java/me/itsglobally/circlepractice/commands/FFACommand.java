@@ -8,7 +8,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import top.nontage.nontagelib.annotations.CommandInfo;
 import top.nontage.nontagelib.command.NontageCommand;
-@CommandInfo(name="ffa", description = "?", override = true, shouldLoad = true)
+
+@CommandInfo(name = "ffa", description = "?", override = true, shouldLoad = true)
 public class FFACommand implements NontageCommand {
 
     private final CirclePractice plugin = CirclePractice.getInstance();

@@ -13,6 +13,7 @@ import top.nontage.nontagelib.annotations.AutoListener;
 public class InventoryListener implements Listener {
 
     private final CirclePractice plugin = CirclePractice.getInstance();
+
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
         if (!(event.getPlayer() instanceof Player player)) return;

@@ -187,25 +187,25 @@ public class FileDataManager {
     // ----------------- Inner Classes -----------------
 
     public record PlayerStats(int wins, int losses, int elo) {
-            public PlayerStats() {
-                this(0, 0, 1000);
-            }
+        public PlayerStats() {
+            this(0, 0, 1000);
+        }
 
         public double getWinRate() {
-                int total = wins + losses;
-                return total == 0 ? 0.0 : (double) wins / total * 100;
-            }
+            int total = wins + losses;
+            return total == 0 ? 0.0 : (double) wins / total * 100;
         }
+    }
 
     public record FfaStats(long kills, long deaths) {
-            public FfaStats() {
-                this(0, 0);
-            }
+        public FfaStats() {
+            this(0, 0);
+        }
 
         public double getKDR() {
-                return deaths == 0 ? kills : (double) kills / deaths;
-            }
+            return deaths == 0 ? kills : (double) kills / deaths;
         }
+    }
 
     public static class CachedPlayerData {
         private final UUID uuid;

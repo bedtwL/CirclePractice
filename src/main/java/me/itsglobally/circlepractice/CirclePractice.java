@@ -1,10 +1,6 @@
 package me.itsglobally.circlePractice;
 
-import me.itsglobally.circlePractice.commands.*;
 import me.itsglobally.circlePractice.data.FileDataManager;
-import me.itsglobally.circlePractice.listeners.DuelListener;
-import me.itsglobally.circlePractice.listeners.InventoryListener;
-import me.itsglobally.circlePractice.listeners.PlayerListener;
 import me.itsglobally.circlePractice.managers.*;
 import me.itsglobally.circlePractice.utils.ConfigManager;
 import net.kyori.adventure.audience.Audience;
@@ -21,6 +17,7 @@ import java.net.URI;
 
 public class CirclePractice extends JavaPlugin {
 
+    public static String serverName = "practice";
     private static CirclePractice instance;
     private static BukkitAudiences adventure;
     private static LuckPerms luckPerms;
@@ -41,8 +38,6 @@ public class CirclePractice extends JavaPlugin {
     public static Audience audience(Player player) {
         return adventure.player(player);
     }
-
-    public static String serverName = "practice";
 
     @Override
     public void onEnable() {
