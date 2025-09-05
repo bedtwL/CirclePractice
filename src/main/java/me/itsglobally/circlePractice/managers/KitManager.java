@@ -47,7 +47,6 @@ public class KitManager {
             }
 
             kit.setEnabled(kitSection.getBoolean("enabled", true));
-            kit.setRanked(kitSection.getBoolean("ranked", true));
             kit.setCanBuild(kitSection.getBoolean("canBuild", true));
 
             kits.put(name, kit);
@@ -115,7 +114,6 @@ public class KitManager {
 
             noDebuff.setContents(contents);
             noDebuff.setArmor(armor);
-            noDebuff.setRanked(false);
             noDebuff.setCanBuild(false);
             kits.put("NoDebuff", noDebuff);
         }
@@ -169,7 +167,6 @@ public class KitManager {
 
             FFA.setContents(contents);
             FFA.setArmor(armor);
-            FFA.setRanked(false);
             FFA.setCanBuild(true);
             kits.put("FFA", FFA);
         }
@@ -184,7 +181,6 @@ public class KitManager {
             config.set(path + ".contents", kit.getContents());
             config.set(path + ".armor", kit.getArmor());
             config.set(path + ".enabled", kit.isEnabled());
-            config.set(path + ".ranked", kit.isRanked());
             config.set(path + ".canBuild", kit.canBuild());
         }
 
