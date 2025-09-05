@@ -19,3 +19,19 @@ settings:
 
   # Whether spectators are allowed
   spectator-enabled: false
+
+# Coin rewards for different activities
+rewards:
+  # Coins earned per kill in FFA
+  kill: 10
+  
+  # Coins earned for winning a duel
+  duel-win: 25
+  
+  # Bonus coins for killstreaks (every 5 kills)
+  killstreak-bonus: 50
+  
+  # Kit multipliers for duel wins
+  kit-multipliers:
+    NoDebuff: 1
+    FFA: 1

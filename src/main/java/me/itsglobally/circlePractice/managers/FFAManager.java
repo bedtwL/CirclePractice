@@ -56,6 +56,9 @@ public record FFAManager(CirclePractice plugin) {
         plugin.getFileDataManager().updateFfaStats(klr.getUniqueId(), 1, 0);
         plugin.getFileDataManager().updateFfaStats(vic.getUniqueId(), 0, 1);
 
+        // Reward coins for kill
+        plugin.getEconomyManager().rewardKill(klr);
+
         MessageUtil.sendActionBar(klr, plugin.getPlayerManager().getPrefix(klr) + klr.getName() + "&rhas killed " + plugin.getPlayerManager().getPrefix(vic) + vic.getName() + "&r!");
 
         klr.setHealth(20.0);
@@ -70,6 +73,9 @@ public record FFAManager(CirclePractice plugin) {
 
         long streak = TempData.getKs(klr.getUniqueId());
         if (streak >= 10 && streak % 5 == 0) {
+            // Reward killstreak bonus
+            plugin.getEconomyManager().rewardKillstreak(klr, streak);
+            
             for (Player op : Bukkit.getOnlinePlayers()) {
                 op.playSound(op.getLocation(), Sound.ENDERDRAGON_GROWL, 0.75f, 2.0f);
             }

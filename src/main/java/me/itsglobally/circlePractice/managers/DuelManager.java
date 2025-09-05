@@ -226,6 +226,12 @@ public class DuelManager {
             // Update stats in file storage
             boolean p1Won = winner.equals(duel.getPlayer1());
 
+            // Reward coins for winning
+            Player winnerPlayer = Bukkit.getPlayer(winner.getUuid());
+            if (winnerPlayer != null) {
+                plugin.getEconomyManager().rewardWin(winnerPlayer, duel.getKit());
+            }
+
             plugin.getFileDataManager().updatePlayerStats(winner.getUuid(), duel.getKit(), true, 0);
             plugin.getFileDataManager().updatePlayerStats(duel.getOpponent(winner).getUuid(), duel.getKit(), false, 0);
         }

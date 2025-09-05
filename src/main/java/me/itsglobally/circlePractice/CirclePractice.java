@@ -30,6 +30,7 @@ public class CirclePractice extends JavaPlugin {
     private ConfigManager configManager;
     private FFAManager ffaManager;
     private PluginManager pluginManager;
+    private EconomyManager economyManager;
 
     public static CirclePractice getInstance() {
         return instance;
@@ -51,8 +52,7 @@ public class CirclePractice extends JavaPlugin {
             this.getPluginLoader().disablePlugin(this);
         }
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            new phapi(this).register();
-            getLogger().info("reg papi");
+            new phapi().register();
         }
 
         instance = this;
@@ -81,6 +81,7 @@ public class CirclePractice extends JavaPlugin {
         queueManager = new QueueManager(this);
         ffaManager = new FFAManager(this);
         pluginManager = new PluginManager(this);
+        economyManager = new EconomyManager(this);
     }
 
     @Override
@@ -123,6 +124,10 @@ public class CirclePractice extends JavaPlugin {
 
     public PluginManager getPluginManager() {
         return pluginManager;
+    }
+
+    public EconomyManager getEconomyManager() {
+        return economyManager;
     }
 
     public LuckPerms getLuckPerms() {

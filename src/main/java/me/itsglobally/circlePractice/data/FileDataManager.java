@@ -73,6 +73,12 @@ public class FileDataManager {
             data.setFfaStats(new FfaStats(kills, deaths));
         }
 
+        // Load coins
+        if (playerData.contains(path + ".coins")) {
+            long coins = playerData.getLong(path + ".coins", 0);
+            data.setCoins(coins);
+        }
+
         return data;
     }
 
@@ -101,6 +107,9 @@ public class FileDataManager {
         FfaStats ffa = data.getFfaStats();
         playerData.set(path + ".ffa.kills", ffa.kills());
         playerData.set(path + ".ffa.deaths", ffa.deaths());
+
+        // Save coins
+        playerData.set(path + ".coins", data.getCoins());
 
         savePlayerDataFile();
     }
@@ -166,6 +175,30 @@ public class FileDataManager {
         return getCachedData(uuid).getFfaStats();
     }
 
+    // --- Coins API ---
+
+    public long getCoins(UUID uuid) {
+        return getCachedData(uuid).getCoins();
+    }
+
+    public void setCoins(UUID uuid, long coins) {
+        getCachedData(uuid).setCoins(coins);
+    }
+
+    public void addCoins(UUID uuid, long coins) {
+        CachedPlayerData data = getCachedData(uuid);
+        data.setCoins(data.getCoins() + coins);
+    }
+
+    public boolean removeCoins(UUID uuid, long coins) {
+        CachedPlayerData data = getCachedData(uuid);
+        if (data.getCoins() >= coins) {
+            data.setCoins(data.getCoins() - coins);
+            return true;
+        }
+        return false;
+    }
+
     private void savePlayerDataFile() {
         try {
             playerData.save(playerDataFile);
@@ -211,6 +244,8 @@ public class FileDataManager {
         private long lastSeen;
         // NEW: FFA stats
         private FfaStats ffaStats = new FfaStats();
+        // NEW: Coins
+        private long coins = 0;
 
         public CachedPlayerData(UUID uuid, String name) {
             this.uuid = uuid;
@@ -259,6 +294,14 @@ public class FileDataManager {
 
         public void setFfaStats(FfaStats ffaStats) {
             this.ffaStats = ffaStats;
+        }
+
+        public long getCoins() {
+            return coins;
+        }
+
+        public void setCoins(long coins) {
+            this.coins = coins;
         }
     }
 }

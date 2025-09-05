@@ -8,15 +8,13 @@ import java.util.List;
 import java.util.UUID;
 
 public class phapi extends PlaceholderExpansion {
-    private final CirclePractice plugin; //
-
-    public phapi(CirclePractice plugin) {
-        this.plugin = plugin;
-    }
 
     public static String rqOp(Player p, String params) {
         UUID u = p.getUniqueId();
         switch (params) {
+            case "coins" -> {
+                return String.valueOf(CirclePractice.getInstance().getEconomyManager().getCoins(u));
+            }
             default -> {
                 return "";
             }
@@ -25,6 +23,9 @@ public class phapi extends PlaceholderExpansion {
 
     public static String nrqOp(OfflinePlayer p, String params) {
         switch (params) {
+            case "coins" -> {
+                return String.valueOf(CirclePractice.getInstance().getEconomyManager().getCoins(p.getUniqueId()));
+            }
             default -> {
                 return "";
             }
@@ -53,7 +54,8 @@ public class phapi extends PlaceholderExpansion {
                 "deaths",
                 "ks",
                 "xp",
-                "stars"
+                "stars",
+                "coins"
         );
         if (requireOnline.contains(params)) {
             if (!(player instanceof Player p)) {
