@@ -55,8 +55,7 @@ public class FileDataManager {
             for (String kit : playerData.getConfigurationSection(path + ".stats").getKeys(false)) {
                 int wins = playerData.getInt(path + ".stats." + kit + ".wins", 0);
                 int losses = playerData.getInt(path + ".stats." + kit + ".losses", 0);
-                int elo = playerData.getInt(path + ".stats." + kit + ".elo", 1000);
-                data.getStats().put(kit, new PlayerStats(wins, losses, elo));
+                data.getStats().put(kit, new PlayerStats(wins, losses));
             }
         }
 
@@ -71,9 +70,6 @@ public class FileDataManager {
         if (playerData.contains(path + ".ffa")) {
             int kills = playerData.getInt(path + ".ffa.kills", 0);
             int deaths = playerData.getInt(path + ".ffa.deaths", 0);
-            int wins = playerData.getInt(path + ".ffa.wins", 0);
-            int losses = playerData.getInt(path + ".ffa.losses", 0);
-            int elo = playerData.getInt(path + ".ffa.elo", 1000);
             data.setFfaStats(new FfaStats(kills, deaths));
         }
 
@@ -94,7 +90,6 @@ public class FileDataManager {
             String kitPath = path + ".stats." + entry.getKey();
             playerData.set(kitPath + ".wins", entry.getValue().wins());
             playerData.set(kitPath + ".losses", entry.getValue().losses());
-            playerData.set(kitPath + ".elo", entry.getValue().elo());
         }
 
         // Save kits
@@ -132,9 +127,9 @@ public class FileDataManager {
         PlayerStats stats = data.getStats().getOrDefault(kit, new PlayerStats());
 
         if (won) {
-            stats = new PlayerStats(stats.wins() + 1, stats.losses(), stats.elo() + eloChange);
+            stats = new PlayerStats(stats.wins() + 1, stats.losses());
         } else {
-            stats = new PlayerStats(stats.wins(), stats.losses() + 1, stats.elo() + eloChange);
+            stats = new PlayerStats(stats.wins(), stats.losses() + 1);
         }
 
         data.getStats().put(kit, stats);
@@ -186,9 +181,9 @@ public class FileDataManager {
 
     // ----------------- Inner Classes -----------------
 
-    public record PlayerStats(int wins, int losses, int elo) {
+    public record PlayerStats(int wins, int losses) {
         public PlayerStats() {
-            this(0, 0, 1000);
+            this(0, 0);
         }
 
         public double getWinRate() {

@@ -35,9 +35,9 @@ public class StatsCommand implements NontageCommand {
 
         for (String kit : plugin.getKitManager().getAllKits().keySet()) {
             FileDataManager.PlayerStats stats = plugin.getFileDataManager().getPlayerStats(target.getUniqueId(), kit);
-            MessageUtil.sendMessage(player, "&e" + kit + ": &aW: " + stats.wins() +
-                    " &cL: " + stats.losses() + " &bELO: " + stats.elo() +
-                    " &dWR: " + String.format("%.1f", stats.getWinRate()) + "%");
+            MessageUtil.sendMessage(player, "&e" + kit + ": &aWins: " + stats.wins() +
+                    " &cLosses: " + stats.losses() +
+                    " &dWin Rate: " + String.format("%.1f", stats.getWinRate()) + "%");
         }
 
     }

@@ -225,19 +225,13 @@ public class DuelManager {
 
             // Update stats in file storage
             boolean p1Won = winner.equals(duel.getPlayer1());
-            int eloChange = calculateEloChange(duel.getPlayer1(), duel.getPlayer2(), p1Won);
 
-            plugin.getFileDataManager().updatePlayerStats(winner.getUuid(), duel.getKit(), true, eloChange);
-            plugin.getFileDataManager().updatePlayerStats(duel.getOpponent(winner).getUuid(), duel.getKit(), false, -eloChange);
+            plugin.getFileDataManager().updatePlayerStats(winner.getUuid(), duel.getKit(), true, 0);
+            plugin.getFileDataManager().updatePlayerStats(duel.getOpponent(winner).getUuid(), duel.getKit(), false, 0);
         }
 
         // Remove duel
         duels.remove(duel.getId());
-    }
-
-    private int calculateEloChange(PracticePlayer p1, PracticePlayer p2, boolean p1Won) {
-        // Basic ELO calculation - can be improved
-        return 25;
     }
 
     public Duel getDuel(UUID playerId) {
