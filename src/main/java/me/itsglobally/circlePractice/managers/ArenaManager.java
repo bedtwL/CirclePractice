@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 
+import java.io.File;
 import java.util.*;
 
 public class ArenaManager {
@@ -18,7 +19,7 @@ public class ArenaManager {
     private final int arenaSize = 1000; // distance between arenas
     private final int yLevel = 50;
     private final int gridMin = 0; // min grid index
-    private final int gridMax = 9; // max grid index
+    private final int gridMax = 1000; // max grid index
 
     private final World world;
 
@@ -69,9 +70,13 @@ public class ArenaManager {
         arena.setSpectatorSpawn(spectator);
         arena.setInUse(true);
 
+        File schemname = new File(plugin.getDataFolder().getAbsoluteFile()+ "plugins/WorldEdit/schematics/duels.schematic");
 
-
-        ArenaPasteWE6.pasteSchematicAt(world);
+        try {
+            ArenaPasteWE6.pasteSchematicAt(world, schemname, x, y, z, true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         arenas.put(arenaName, arena);
         return arena;

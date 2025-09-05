@@ -10,7 +10,6 @@ public record PluginManager(CirclePractice plugin) {
         for (Duel d : plugin.getDuelManager().getAllDuels().values()) {
             plugin.getDuelManager().endDuel(d, d.getPlayer1());
         }
-        plugin.getArenaManager().loadArenas();
         plugin.getKitManager().loadKits();
         plugin.getFileDataManager().initialize();
     }
