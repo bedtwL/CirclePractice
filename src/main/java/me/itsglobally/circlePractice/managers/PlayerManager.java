@@ -50,8 +50,13 @@ public class PlayerManager {
 
     public String getPrefixColor(Player p) {
         User user = plugin.getLuckPerms().getUserManager().getUser(p.getUniqueId());
-        return (user.getCachedData().getMetaData().getMetaValue("chatcolor") == null) ? user.getCachedData().getMetaData().getMetaValue("chatcolor") : getPrefix(p).substring(0, 2);
+        return (user.getCachedData().getMetaData().getMetaValue("prefixcolor") == null) ? user.getCachedData().getMetaData().getMetaValue("prefixcolor") : getPrefix(p).substring(0, 2);
     }
+
+    public String getPrefixedName(Player p) {
+        return getPrefix(p) + p.getName();
+    }
+
 
 
 }

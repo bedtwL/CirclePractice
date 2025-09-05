@@ -109,8 +109,7 @@ public class PlayerListener implements Listener {
     public void onMessage(AsyncPlayerChatEvent e) {
         e.setCancelled(true);
         Bukkit.broadcastMessage(MessageUtil.formatMessage(
-                plugin.getPlayerManager().getPrefix(e.getPlayer())
-                        + e.getPlayer().getName()
+                plugin.getPlayerManager().getPrefixedName(e.getPlayer())
                         + "&r » "
                         + e.getMessage()
         )); // [RETARDED] Wilson_TW_awa » I AM GAY

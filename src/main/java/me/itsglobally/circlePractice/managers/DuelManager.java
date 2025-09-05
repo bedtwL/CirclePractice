@@ -122,32 +122,25 @@ public class DuelManager {
             return;
         }
 
-        // Create duel
         Duel duel = new Duel(pp1, pp2, kit, arena);
         duels.put(duel.getId(), duel);
 
-        // Set player states
         pp1.setState(PracticePlayer.PlayerState.DUEL);
         pp2.setState(PracticePlayer.PlayerState.DUEL);
         pp1.setCurrentDuel(duel);
         pp2.setCurrentDuel(duel);
 
-        // Mark arena as in use
         arena.setInUse(true);
 
-        // Save inventories
         pp1.saveInventory(player1);
         pp2.saveInventory(player2);
 
-        // Teleport players
         player1.teleport(arena.getPos1());
         player2.teleport(arena.getPos2());
 
-        // Apply kit
         plugin.getKitManager().applyKit(player1, kit);
         plugin.getKitManager().applyKit(player2, kit);
 
-        // Start countdown
         startCountdown(duel);
     }
 

@@ -110,26 +110,5 @@ public class QueueManager {
     private void updateQueueInfo(Player player, String kit) {
         Queue<PracticePlayer> queue = queues.get(kit);
         if (queue == null) return;
-
-        int position = getPosition(player, queue);
-        long waitTime = (System.currentTimeMillis() - plugin.getPlayerManager().getPlayer(player).getQueueStartTime()) / 1000;
-
-        MessageUtil.sendActionBar(player, "&eQueue: &a" + kit + " &7| &ePosition: &a" + position + " &7| &eTime: &a" + waitTime + "s");
-    }
-
-    private int getPosition(Player player, Queue<PracticePlayer> queue) {
-        int position = 1;
-        for (PracticePlayer pp : queue) {
-            if (pp.getUuid().equals(player.getUniqueId())) {
-                return position;
-            }
-            position++;
-        }
-        return -1;
-    }
-
-    public int getQueueSize(String kit) {
-        Queue<PracticePlayer> queue = queues.get(kit);
-        return queue != null ? queue.size() : 0;
     }
 }
