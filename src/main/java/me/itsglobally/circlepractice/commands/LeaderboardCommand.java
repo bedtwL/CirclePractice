@@ -7,7 +7,7 @@ import org.bukkit.entity.Player;
 import top.nontage.nontagelib.annotations.CommandInfo;
 import top.nontage.nontagelib.command.NontageCommand;
 
-@CommandInfo(name = "leaderboard", description = "ga", override = true, shouldLoad = true)
+// @CommandInfo(name = "leaderboard", description = "ga", override = true, shouldLoad = true)
 public class LeaderboardCommand implements NontageCommand {
 
     private final CirclePractice plugin = CirclePractice.getInstance();

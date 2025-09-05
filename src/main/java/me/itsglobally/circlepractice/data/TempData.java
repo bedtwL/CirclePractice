@@ -24,7 +24,7 @@ public class TempData {
         ks.put(vic, k);
     }
 
-    public static void addtKs(UUID vic, long k) {
+    public static void addKs(UUID vic, long k) {
         ks.put(vic, getKs(vic) + k);
     }
 

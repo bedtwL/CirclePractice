@@ -36,6 +36,7 @@ public class DuelListener implements Listener {
                 // End the duel
                 Duel duel = practicePlayer.getCurrentDuel();
                 PracticePlayer winner = duel.getOpponent(practicePlayer);
+                winner.getPlayer().setHealth(20.0);
 
 
                 MessageUtil.sendTitle(player, "&cDEFEAT!", "You have been defeated by " + winner.getName());

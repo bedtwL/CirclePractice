@@ -51,7 +51,7 @@ public record FFAManager(CirclePractice plugin) {
         if (TempData.getLastHit(klr.getUniqueId()) == vic.getUniqueId()) TempData.setLastHit(klr.getUniqueId(), null);
 
         TempData.setKs(vic.getUniqueId(), 0);
-        TempData.addtKs(klr.getUniqueId(), 1);
+        TempData.addKs(klr.getUniqueId(), 1);
 
         plugin.getFileDataManager().updateFfaStats(klr.getUniqueId(), 1, 0);
         plugin.getFileDataManager().updateFfaStats(vic.getUniqueId(), 0, 1);

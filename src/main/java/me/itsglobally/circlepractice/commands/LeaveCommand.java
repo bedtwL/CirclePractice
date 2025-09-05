@@ -25,10 +25,8 @@ public class LeaveCommand implements NontageCommand {
         if (practicePlayer.isInQueue()) {
             plugin.getQueueManager().leaveQueue(player);
         } else if (practicePlayer.isInDuel()) {
-            // End duel with opponent as winner
             plugin.getDuelManager().endDuel(practicePlayer.getCurrentDuel(),
                     practicePlayer.getCurrentDuel().getOpponent(practicePlayer));
-            MessageUtil.sendMessage(player, "&cYou left the duel!");
         } else {
             MessageUtil.sendMessage(player, "&cYou're not in a queue or duel!");
         }
