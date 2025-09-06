@@ -1,0 +1,118 @@
+package me.itsglobally.circlePractice.cc;
+
+import me.itsglobally.circlePractice.a;
+import me.itsglobally.circlePractice.bb.b1;
+import me.itsglobally.circlePractice.bb.b3;
+import me.itsglobally.circlePractice.bb.b4;
+import me.itsglobally.circlePractice.ff.f6;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import top.nontage.nontagelib.annotations.AutoListener;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@AutoListener
+public class c2 implements Listener {
+
+    private final a plugin = a.getInstance();
+
+    List<Location> blockplaced = new ArrayList<>();
+
+    @EventHandler
+    public void onPlayerJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        plugin.getPlayerManager().addPlayer(player);
+        f6.sendTitle(player, "&cThis server is still in DEVELOPMENT!", "&aFeel free to report any bugs!");
+    }
+
+    @EventHandler
+    public void onPlayerQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        b4 b4 = plugin.getPlayerManager().getPlayer(player);
+
+        if (b4 != null) {
+            // Handle leaving queue
+            if (b4.isInQueue()) {
+                plugin.getQueueManager().leaveQueue(player);
+            }
+
+            // Handle leaving duel
+            if (b4.isInDuel()) {
+                plugin.getDuelManager().endDuel(b4.getCurrentDuel(),
+                        b4.getCurrentDuel().getOpponent(b4));
+            }
+        }
+
+        plugin.getPlayerManager().removePlayer(player.getUniqueId());
+    }
+
+    @EventHandler
+    public void onPlace(BlockPlaceEvent e) {
+        Player player = e.getPlayer();
+        b4 pP = plugin.getPlayerManager().getPlayer(player);
+        if (pP.getState() == b4.PlayerState.SPECTATING) {
+            e.setCancelled(true);
+            f6.sendActionBar(player, "&cYou cannot place blocks here!");
+        }
+        if (pP.getState() == b4.PlayerState.DUEL) {
+            b1 cD = plugin.getPlayerManager().getPlayer(player.getUniqueId()).getCurrentDuel();
+            b3 k = plugin.getKitManager().getKit(cD.getKit());
+            if (!k.canBuild()) {
+                e.setCancelled(true);
+                f6.sendActionBar(player, "&cYou cannot place blocks here!");
+                return;
+            }
+            Material against = e.getBlockAgainst().getType();
+            if (against == Material.WATER || against == Material.STATIONARY_WATER || against == Material.LAVA || against == Material.STATIONARY_LAVA) {
+                f6.sendActionBar(player, "&cYou cannot place blocks here!");
+                e.setCancelled(true);
+                return;
+            }
+            blockplaced.add(e.getBlockPlaced().getLocation());
+        }
+    }
+
+    @EventHandler
+    public void onBreak(BlockBreakEvent e) {
+        Player player = e.getPlayer();
+        b4 pP = plugin.getPlayerManager().getPlayer(player);
+        if (pP.getState() == b4.PlayerState.SPECTATING) {
+            e.setCancelled(true);
+            f6.sendActionBar(player, "&cYou cannot place blocks here!");
+        }
+        if (pP.getState() == b4.PlayerState.DUEL) {
+            b1 cD = plugin.getPlayerManager().getPlayer(player.getUniqueId()).getCurrentDuel();
+            b3 k = plugin.getKitManager().getKit(cD.getKit());
+            if (!k.canBuild()) {
+                e.setCancelled(true);
+                f6.sendActionBar(player, "&cYou cannot place blocks here!");
+                return;
+            }
+            if (!blockplaced.contains(e.getBlock().getLocation())) {
+                e.setCancelled(true);
+                f6.sendActionBar(player, "&cYou can only place blocks that placed by player!");
+            }
+        }
+    }
+
+    @EventHandler
+    public void onMessage(AsyncPlayerChatEvent e) {
+        e.setCancelled(true);
+        Bukkit.broadcastMessage(f6.formatMessage(
+                plugin.getPlayerManager().getPrefixedName(e.getPlayer())
+                        + "&r » "
+                        + e.getMessage()
+        )); // [RETARDED] Wilson_TW_awa » I AM GAY
+    }
+
+}
